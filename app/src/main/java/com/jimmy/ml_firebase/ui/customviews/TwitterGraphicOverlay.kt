@@ -1,35 +1,6 @@
-/*
- *
- * Copyright (c) 2018 Razeware LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
- * distribute, sublicense, create a derivative work, and/or sell copies of the
- * Software in any work that is designed, intended, or marketed for pedagogical or
- * instructional purposes related to programming, coding, application development,
- * or information technology.  Permission for such use, copying, modification,
- * merger, publication, distribution, sublicensing, creation of derivative works,
- * or sale is expressly withheld.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 
-package com.raywenderlich.android.twittersnap
+
+package com.jimmy.ml_firebase.ui.customviews
 
 import android.content.Context
 import android.content.Intent
@@ -39,34 +10,55 @@ import android.graphics.Rect
 import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
+import com.jimmy.ml_firebase.ui.graphics.TextGraphic
 import java.util.*
 
 /**
  * Adapted from the ML Kit Google code lab
  * https://codelabs.developers.google.com/codelabs/mlkit-android/#0
+ *
+ *  custom view which extends the View class
  */
 
 class TwitterGraphicOverlay(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
+  /**
+   * Any()
+   *
+   * The root of the Kotlin class hierarchy. Every Kotlin class has Any as a superclass, just like Object is the
+   * base class in any  OOP class
+   */
   private val lock = Any()
   private val graphics = HashSet<Graphic>()
-  private val handles = mutableListOf<TwitterGraphicOverlay.Handle>()
+  private val handles = mutableListOf<Handle>()
 
+  // static initializer
   init {
+    //Register a callback to be invoked when a touch event is sent to this view.
     setOnTouchListener { _, event ->
       openTwitterIfProfileClicked(event.x, event.y)
     }
   }
 
+  /**
+   * handler for figuring out the x,y of touch event
+   */
   private fun openTwitterIfProfileClicked(x: Float, y: Float): Boolean {
+    /*
+     search the list of handles for one that has bounding box containing the coordinates of the touch event
+     returns false if no match found, otherwise invokes the helper method to open twitter handle
+      */
     return handles.find { it.boundingBox?.contains(x.toInt(), y.toInt()) ?: false }?.let {
-      openTwitterProfile(it.text)
-      true
-    } ?: run {
-      false
+      openTwitterProfile(it.text) // call helpere method to open twitter uri and return true
+      true } ?: run {
+      false // call the default value return of false if not found
     }
   }
 
+
+  /**
+   * helper method to open twitter in browser or app if found
+   */
   private fun openTwitterProfile(handle: String) {
     val url = "https://twitter.com/" + handle.trim().removePrefix("@")
     val browserIntent = Intent(Intent.ACTION_VIEW,
@@ -84,9 +76,6 @@ class TwitterGraphicOverlay(context: Context, attrs: AttributeSet) : View(contex
     /**
      * Draw the graphic on the supplied canvas. Drawing should use the following methods to convert
      * to view coordinates for the graphics that are drawn:
-     *
-     *
-     *
      *
      * @param canvas drawing canvas
      */
@@ -117,6 +106,7 @@ class TwitterGraphicOverlay(context: Context, attrs: AttributeSet) : View(contex
     postInvalidate()
   }
 
+  // inner inline class
   class Handle(val text: String, val boundingBox: Rect?)
 
   fun addText(text: String, boundingBox: Rect?) {
@@ -140,4 +130,6 @@ class TwitterGraphicOverlay(context: Context, attrs: AttributeSet) : View(contex
       }
     }
   }
+
+
 }
