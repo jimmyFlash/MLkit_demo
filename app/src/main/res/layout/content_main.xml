@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
 
   <android.support.constraint.ConstraintLayout
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:app="http://schemas.android.com/apk/res-auto"
+          xmlns:tools="http://schemas.android.com/tools"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        tools:context=".ui.activities.MainActivity">
 
     <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/select_image_for_text_recognition"
@@ -41,5 +40,5 @@
             app:layout_constraintStart_toStartOf="parent" />
 
   </android.support.constraint.ConstraintLayout>
-</layout>
+
 
