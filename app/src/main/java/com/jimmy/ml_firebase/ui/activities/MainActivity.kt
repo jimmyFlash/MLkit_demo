@@ -7,6 +7,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.graphics.Bitmap
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,6 +18,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.work.WorkStatus
 import com.jimmy.ml_firebase.Constants
 import com.jimmy.ml_firebase.PermissionManager
@@ -24,7 +27,31 @@ import com.jimmy.ml_firebase.databinding.ActivityMainBinding
 import com.jimmy.ml_firebase.uidataproviders.viewmodel.MainActivityViewModel
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
+
+    override fun showNoTextMessage() {
+        Toast.makeText(this, "No text detected", Toast.LENGTH_LONG).show()
+    }
+
+    override fun showHandle(text: String, boundingBox: Rect?) {
+        binding.overlay.addText(text, boundingBox)
+    }
+
+    override fun showBox(boundingBox: Rect?) {
+        binding.overlay.addBox(boundingBox)
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun showProgress() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.fab.visibility = View.GONE
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun hideProgress() {
+        binding.progressBar.visibility = View.GONE
+        binding.fab.visibility = View.VISIBLE
+    }
 
     lateinit var binding : ActivityMainBinding
     lateinit var mViewModel : MainActivityViewModel
@@ -41,9 +68,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         binding.toolbar.title = getString(R.string.app_name)
-
-
-
 
         // Get the ViewModel
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
@@ -88,43 +112,6 @@ class MainActivity : AppCompatActivity() {
         // Show work status for the tagged work request, through livedata observer
         mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
 
-
-
-        /*   var workmanagerInst = mViewModel.getOutputStatusSingleWork()
-           workmanagerInst?.observe(this, Observer {
-
-               Log.e("hhhh", "Just started working with this shit")
-               // use let block to apply code to the workstatus object
-               it.let {
-
-                   Log.e("ggggg", "we are now in the main it iterator ")
-                   if(it != null ){
-
-                       val finished = it.state.isFinished
-
-
-                       if (finished) {
-
-                           //If the WorkStatus is finished, get the output data, using workStatus.getOutputData().
-                           val outputData = it.outputData
-
-                           //get the output URI, remember that it's stored with the Constants.KEY_IMAGE_URI key.
-                           val outputImageUri = outputData.getString(Constants.KEY_IMAGE_EDITED_URI)
-                           // If there is an output file show "See File" button
-                           if (!TextUtils.isEmpty(outputImageUri)) {
-
-                               val bitmapResized =
-                                   MediaStore.Images.Media.getBitmap(this.contentResolver, Uri.parse(outputImageUri))
-                               binding.imageView.setImageBitmap(bitmapResized)
-                           }
-
-                           *//* setUpCloudSearch(selectedImageBitmap)
-                        overlay.clear()
-                        presenter.runTextRecognition(selectedImageBitmap!!)*//*
-                    }
-                }
-            }
-        })*/
     }
 
 
@@ -143,13 +130,11 @@ class MainActivity : AppCompatActivity() {
             // We only care about the one output status.
             // Every continuation has only one worker tagged TAG_OUTPUT
             val workStatus = listOfWorkStatuses[0]
-
-
             val finished = workStatus.state.isFinished
 
             if (finished) {
 
-                showWorkFinished()
+                hideProgress()
                 //If the WorkStatus is finished, get the output data, using workStatus.getOutputData().
                 val outputData = workStatus.outputData
 
@@ -160,17 +145,13 @@ class MainActivity : AppCompatActivity() {
 
                     val bitmapResized = MediaStore.Images.Media.getBitmap(this.contentResolver, Uri.parse(outputImageUri))
                     binding.imageView.setImageBitmap(bitmapResized)
+                    setUpCloudSearch(bitmapResized)
+                    binding.overlay.clear()
+                    mViewModel.runTextRecognition(bitmapResized!!)
                 }
-
-/*
-                  setUpCloudSearch(selectedImageBitmap)
-                  overlay.clear()
-                  presenter.runTextRecognition(selectedImageBitmap!!)*/
             }else{
-                showWorkInProgress()
+                showProgress()
             }
-
-            println("shit....")
 
         }
     }
@@ -208,8 +189,6 @@ class MainActivity : AppCompatActivity() {
                         // can check if a certain permission you're instrested in exits is denied, if not you proceed or halt
                     }
                 }
-
-
             else -> {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults)
             }
@@ -217,24 +196,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-    /**
-     * Shows and hides views for when the Activity is processing an image
-     */
-    @SuppressLint("RestrictedApi")
-    private fun showWorkInProgress() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.fab.visibility = View.GONE
-
-    }
-
-    /**
-     * Shows and hides views for when the Activity is done processing an image
-     */
-    @SuppressLint("RestrictedApi")
-    private fun showWorkFinished() {
-        binding.progressBar.visibility = View.GONE
-        binding.fab.visibility = View.VISIBLE
+    private fun setUpCloudSearch(selectedImageBitmap: Bitmap?) {
+        binding.fab.setImageResource(R.drawable.ic_cloud_black_24dp)
+        binding.fab.setBackgroundColor(getColor(R.color.colorPrimaryDark))
+        binding.fab.setOnClickListener {
+            binding.overlay.clear()
+            mViewModel.runCloudTextRecognition(selectedImageBitmap!!)
+        }
     }
 
 

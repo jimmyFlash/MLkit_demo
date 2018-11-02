@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -12,10 +13,6 @@ import android.support.v4.app.NotificationManagerCompat
 import android.util.Base64
 import com.jimmy.ml_firebase.Constants
 import com.jimmy.ml_firebase.R
-import android.graphics.BitmapFactory
-import java.nio.file.Files.exists
-import java.util.UUID.randomUUID
-import android.support.annotation.NonNull
 import java.io.*
 import java.util.*
 
