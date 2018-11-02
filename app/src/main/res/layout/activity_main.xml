@@ -8,6 +8,17 @@
       xmlns:tools="http://schemas.android.com/tools">
 
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+                name="viewmodel"
+                type="com.jimmy.ml_firebase.uidataproviders.viewmodel.MainActivityViewModel" />
+
+    </data>
+
+
       <android.support.constraint.motion.MotionLayout
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -61,12 +72,12 @@
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:indeterminate="true"
-                  android:visibility="gone"
+                  android:visibility="@{viewmodel.isLoading ?  View.VISIBLE : View.INVISIBLE }"
                   app:layout_constraintBottom_toBottomOf="parent"
                   app:layout_constraintEnd_toEndOf="parent"
-                  app:layout_constraintStart_toStartOf="parent" />
+                  app:layout_constraintStart_toStartOf="parent"
 
-
+          />
 
           <android.support.design.widget.FloatingActionButton
                   android:id="@+id/fab"
@@ -75,7 +86,9 @@
                   android:layout_margin="@dimen/fab_margin"
                   app:srcCompat="@drawable/ic_camera_enhance_black_24dp"
                   app:layout_constraintBottom_toBottomOf="parent"
-                  app:layout_constraintEnd_toEndOf="parent"/>
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:visibility="@{viewmodel.isLoading ?  View.INVISIBLE : View.VISIBLE }"
+          />
 
       </android.support.constraint.motion.MotionLayout>
 

@@ -1,23 +1,24 @@
 package com.jimmy.ml_firebase.uidataproviders.viewmodel
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
+import android.databinding.ObservableField
 import android.graphics.Bitmap
 import android.graphics.Rect
-import android.arch.lifecycle.LiveData
 import android.net.Uri
 import android.text.TextUtils
 import android.widget.ImageView
 import androidx.work.*
+import com.google.firebase.ml.vision.FirebaseVision
+import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer
 import com.jimmy.ml_firebase.Constants.IMAGE_MANIPULATION_WORK_NAME
 import com.jimmy.ml_firebase.Constants.KEY_IMAGE_URI
-import com.jimmy.ml_firebase.Constants.TAG_OUTPUT
-import com.jimmy.ml_firebase.workers.ImageResizeWorker
-import androidx.work.OneTimeWorkRequest
 import com.jimmy.ml_firebase.Constants.KEY_IMAGE_VIEW_H
 import com.jimmy.ml_firebase.Constants.KEY_IMAGE_VIEW_W
-import com.jimmy.ml_firebase.Constants.TAG_OUTPUT_ID
+import com.jimmy.ml_firebase.Constants.TAG_OUTPUT
 import com.jimmy.ml_firebase.workers.CleanupWorker
-import java.util.*
+import com.jimmy.ml_firebase.workers.ImageResizeWorker
 
 
 class MainActivityViewModel : ViewModel() {
@@ -31,11 +32,15 @@ class MainActivityViewModel : ViewModel() {
 
     private var mSavedSingleWorkStatus: LiveData<WorkStatus>? = null
 
+
+    val isLoading = ObservableField(false)
+
     // New instance variable for the WorkStatus
     private val mOutputUri: Uri? = null
 
     fun runTextRecognition(selectedImage: Bitmap) {
-        // TODO
+        val image = FirebaseVisionImage.fromBitmap(selectedImage)
+        val detector : FirebaseVisionTextRecognizer = FirebaseVision.getInstance().onDeviceTextRecognizer
     }
 
     fun runCloudTextRecognition(selectedImage: Bitmap) {
@@ -71,9 +76,8 @@ class MainActivityViewModel : ViewModel() {
         fun showNoTextMessage()
         fun showHandle(text: String, boundingBox: Rect?)
         fun showBox(boundingBox: Rect?)
-        fun showProgress()
-        fun hideProgress()
     }
+
 
     /**
      * Setters, set the uri of loaded image

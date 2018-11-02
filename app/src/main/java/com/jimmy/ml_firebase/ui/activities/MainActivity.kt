@@ -41,18 +41,6 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
         binding.overlay.addBox(boundingBox)
     }
 
-    @SuppressLint("RestrictedApi")
-    override fun showProgress() {
-        binding.progressBar.visibility = View.VISIBLE
-        binding.fab.visibility = View.GONE
-    }
-
-    @SuppressLint("RestrictedApi")
-    override fun hideProgress() {
-        binding.progressBar.visibility = View.GONE
-        binding.fab.visibility = View.VISIBLE
-    }
-
     lateinit var binding : ActivityMainBinding
     lateinit var mViewModel : MainActivityViewModel
 
@@ -71,6 +59,10 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
 
         // Get the ViewModel
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+
+        binding.viewmodel = mViewModel
+
+        binding.progressBar.visibility = View.INVISIBLE
 
 
         setUpNewImageListener()
@@ -112,6 +104,8 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
         // Show work status for the tagged work request, through livedata observer
         mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
 
+
+
     }
 
 
@@ -133,8 +127,7 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
             val finished = workStatus.state.isFinished
 
             if (finished) {
-
-                hideProgress()
+                mViewModel.isLoading.set(false)
                 //If the WorkStatus is finished, get the output data, using workStatus.getOutputData().
                 val outputData = workStatus.outputData
 
@@ -150,7 +143,7 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
                     mViewModel.runTextRecognition(bitmapResized!!)
                 }
             }else{
-                showProgress()
+                mViewModel.isLoading.set(true)
             }
 
         }
