@@ -7,6 +7,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    signingConfigs {
+        ml_fb_cert {
+            keyAlias 'mljim'
+            keyPassword '123456'
+            storeFile file('E:/projects/AndroidStud/personal projects/ML_firebase/ml-fb-cert.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.jimmy.ml_firebase"
@@ -15,18 +23,26 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+
     }
     buildTypes {
+        def uniqueAppId = "\"ml-firebase-jimmy\""
+
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "API_KEY", uniqueAppId
+            signingConfig signingConfigs.ml_fb_cert
+        }
+
+        debug {
+            buildConfigField 'String', "API_KEY", uniqueAppId
         }
     }
-
     dataBinding {
         enabled = true
     }
-
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
@@ -36,22 +52,28 @@ android {
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:support-media-compat:28.0.0'
     //implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:design:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     // life cycle aware components lib
     implementation 'android.arch.lifecycle:extensions:' + rootProject.archLifecycleVersion
     kapt 'android.arch.lifecycle:compiler:' + rootProject.archLifecycleVersion
-
     // work manager dependency
-//    implementation "android.arch.work:work-runtime:$work_version"
+    //    implementation "android.arch.work:work-runtime:$work_version"
     implementation "android.arch.work:work-runtime-ktx:$work_version"
     // constraint layout with motionlayout support
     implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
+    implementation "com.google.firebase:firebase-core:" + rootProject.firebaseCore
+    implementation "com.google.firebase:firebase-ml-vision:" + rootProject.firebaseMlVision
+    implementation 'com.android.support:exifinterface:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
+

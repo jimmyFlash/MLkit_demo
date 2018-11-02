@@ -10,6 +10,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.0.1'
 
     }
 }
@@ -28,5 +29,8 @@ task clean(type: Delete) {
 ext {
 
     archLifecycleVersion = "1.0.0"
+    firebaseCore = "16.0.4"
+    firebaseMlVision = "18.0.1"
+
 
 }
