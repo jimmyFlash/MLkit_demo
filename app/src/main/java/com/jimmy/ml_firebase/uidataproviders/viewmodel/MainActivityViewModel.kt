@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.work.*
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer
 import com.jimmy.ml_firebase.Constants.IMAGE_MANIPULATION_WORK_NAME
 import com.jimmy.ml_firebase.Constants.KEY_IMAGE_URI
@@ -41,10 +42,28 @@ class MainActivityViewModel : ViewModel() {
     fun runTextRecognition(selectedImage: Bitmap) {
         val image = FirebaseVisionImage.fromBitmap(selectedImage)
         val detector : FirebaseVisionTextRecognizer = FirebaseVision.getInstance().onDeviceTextRecognizer
+
+        detector.processImage(image)
+            .addOnSuccessListener { texts ->
+                processTextRecognitionResult(texts)
+            }
+            .addOnFailureListener{ it ->
+                it.printStackTrace()
+            }
+    }
+
+    private fun processTextRecognitionResult(texts: FirebaseVisionText) {
+        isLoading.set(false)
+        val blocks = texts.textBlocks
+        if (blocks.size == 0) {
+//            view.showNoTextMessage()
+            return
+        }
+        //
     }
 
     fun runCloudTextRecognition(selectedImage: Bitmap) {
-        // TODO
+        // cloud ML requires paid Blaze plan not implemented now ( using spark free plan )
     }
 
     private fun looksLikeHandle(text: String) = text.matches(Regex("@(\\w+)"))
@@ -62,10 +81,9 @@ class MainActivityViewModel : ViewModel() {
             WorkRequests
         */
 
-
         // This transformation makes sure that whenever the current work Id changes the WorkStatus
         // the UI is listening to changes
-        mSavedWorkStatus = mWorkManager?.getStatusesByTagLiveData(TAG_OUTPUT) as LiveData<List<WorkStatus>>
+        mSavedWorkStatus = mWorkManager?.getStatusesByTagLiveData(TAG_OUTPUT)
 
 //        mSavedSingleWorkStatus = mWorkManager?.getStatusByIdLiveData(UUID.fromString("00002415-0000-1000-8000-00805F9B34FB"))
 

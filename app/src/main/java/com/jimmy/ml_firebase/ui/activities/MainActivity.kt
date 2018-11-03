@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
 
                     val bitmapResized = MediaStore.Images.Media.getBitmap(this.contentResolver, Uri.parse(outputImageUri))
                     binding.imageView.setImageBitmap(bitmapResized)
-                    setUpCloudSearch(bitmapResized)
+//                    setUpCloudSearch(bitmapResized)
                     binding.overlay.clear()
                     mViewModel.runTextRecognition(bitmapResized!!)
                 }
@@ -189,6 +189,7 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
 
     }
 
+    // use Google's cloud firebase ML
     private fun setUpCloudSearch(selectedImageBitmap: Bitmap?) {
         binding.fab.setImageResource(R.drawable.ic_cloud_black_24dp)
         binding.fab.setBackgroundColor(getColor(R.color.colorPrimaryDark))
