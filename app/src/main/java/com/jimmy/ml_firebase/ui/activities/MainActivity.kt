@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -20,6 +21,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.work.WorkStatus
+import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.jimmy.ml_firebase.Constants
 import com.jimmy.ml_firebase.PermissionManager
 import com.jimmy.ml_firebase.R
@@ -27,17 +29,13 @@ import com.jimmy.ml_firebase.databinding.ActivityMainBinding
 import com.jimmy.ml_firebase.uidataproviders.viewmodel.MainActivityViewModel
 
 
-class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
+class MainActivity : AppCompatActivity() {
 
-    override fun showNoTextMessage() {
-        Toast.makeText(this, "No text detected", Toast.LENGTH_LONG).show()
-    }
-
-    override fun showHandle(text: String, boundingBox: Rect?) {
+    fun showHandle(text: String, boundingBox: Rect?) {
         binding.overlay.addText(text, boundingBox)
     }
 
-    override fun showBox(boundingBox: Rect?) {
+    fun showBox(boundingBox: Rect?) {
         binding.overlay.addBox(boundingBox)
     }
 
@@ -48,6 +46,7 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
 
     private val REQUEST_MULTI_PERMISSION = 10
     private var  pm: PermissionManager? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +65,23 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
 
 
         setUpNewImageListener()
+
+        /*
+        handling device orientation change, need to resize the original image to fit new screen dimensions
+         */
+        if(mViewModel.getImageUri() != null){
+            Log.e("configuration change", mViewModel.getImageUri().toString())
+            binding.overlay.clear()
+            binding.imageView.setImageBitmap(null)
+            mViewModel.resetBlocks()
+            Handler().postDelayed({
+                mViewModel.resizeimageWork(binding.imageView)
+                mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
+                //observe the changes to the state of the read text vision object
+                mViewModel.mtextBlocks?.observe(this,traceTwitterHabdles())
+            }, 2000)
+        }
+
        /*
            Evaluates the pending bindings, updating any Views that have expressions bound to modified
            variables. This must be run on the UI thread.
@@ -75,13 +91,15 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
 
     private fun setUpNewImageListener() {
 
-              binding.fab.setOnClickListener { _ ->
+          binding.fab.setOnClickListener {
 
-                  pm = PermissionManager.PermissionBuilder(this, REQUEST_MULTI_PERMISSION)
-                      .addPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                      .build()
+              pm = PermissionManager.PermissionBuilder(this, REQUEST_MULTI_PERMISSION)
+                  .addPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                  .build()
         }
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageReturnedIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent)
@@ -92,22 +110,43 @@ class MainActivity : AppCompatActivity(), MainActivityViewModel.View {
 
                     mViewModel.setImageUri(it.toString())// call setter method in VM to set image data
                     if (mViewModel.getImageUri() != null) {
-
+                        Log.e("CAM image uri", mViewModel.getImageUri().toString())
                         // resize image bitmap using VM method that calls for worker
-                        val selectedImageBitmap = mViewModel.resizeimageWork(binding.imageView)
+                        mViewModel.resizeimageWork(binding.imageView)
                     }
-
                 }
             }
         }
 
+        Log.e("outputstatus", "${mViewModel.getOutputStatus()}")
         // Show work status for the tagged work request, through livedata observer
         mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
 
-
-
+        //observe the changes to the state of the read text vision object
+        mViewModel.mtextBlocks?.observe(this,traceTwitterHabdles())
     }
 
+    fun traceTwitterHabdles(): Observer<FirebaseVisionText>{
+         return Observer{texts ->
+
+             val blocks = texts?.textBlocks
+             if (blocks?.size == 0) {
+                 Toast.makeText(this, "No text detected", Toast.LENGTH_LONG).show()
+                 return@Observer
+             }
+             blocks?.forEach { block ->
+                 block.lines.forEach { line ->
+                     line.elements.forEach { element ->
+                         // to show borders around all detected text blocks
+                         //showBox(element.boundingBox)
+                         if (mViewModel.looksLikeHandle(element.text)) {
+                             showHandle(element.text, element.boundingBox)
+                         }
+                     }
+                 }
+             }
+         }
+    }
 
     fun workStatusesObserver(): Observer<List<WorkStatus>> {
         return Observer { listOfWorkStatuses ->

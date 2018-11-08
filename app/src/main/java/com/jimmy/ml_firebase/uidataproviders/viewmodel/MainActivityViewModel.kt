@@ -1,16 +1,24 @@
 package com.jimmy.ml_firebase.uidataproviders.viewmodel
 
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import android.text.TextUtils
+import android.util.SparseArray
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.work.*
 import com.google.firebase.ml.vision.FirebaseVision
+import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer
+import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer
 import com.jimmy.ml_firebase.Constants.IMAGE_MANIPULATION_WORK_NAME
@@ -21,8 +29,14 @@ import com.jimmy.ml_firebase.Constants.TAG_OUTPUT
 import com.jimmy.ml_firebase.workers.CleanupWorker
 import com.jimmy.ml_firebase.workers.ImageResizeWorker
 
+/*
+    AndroidViewModel from Lifecycle-aware components library that has context.
+    That context is context of the application, not of an Activity
 
-class MainActivityViewModel : ViewModel() {
+ */
+class MainActivityViewModel(application : Application) : AndroidViewModel(application) {
+
+    val ctx = this.getApplication<Application>()
 
     private var mImageUri: Uri? = null// image uri to load
 
@@ -33,6 +47,7 @@ class MainActivityViewModel : ViewModel() {
 
     private var mSavedSingleWorkStatus: LiveData<WorkStatus>? = null
 
+     var mtextBlocks: MutableLiveData<FirebaseVisionText> = MutableLiveData()
 
     val isLoading = ObservableField(false)
 
@@ -54,19 +69,41 @@ class MainActivityViewModel : ViewModel() {
 
     private fun processTextRecognitionResult(texts: FirebaseVisionText) {
         isLoading.set(false)
-        val blocks = texts.textBlocks
-        if (blocks.size == 0) {
-//            view.showNoTextMessage()
-            return
-        }
-        //
+        mtextBlocks?.value = texts
+    }
+
+    fun resetBlocks(){
+        mtextBlocks?.value = null
     }
 
     fun runCloudTextRecognition(selectedImage: Bitmap) {
         // cloud ML requires paid Blaze plan not implemented now ( using spark free plan )
+        isLoading.set(true)
+
+        // 1
+        val options = FirebaseVisionCloudTextRecognizerOptions.Builder()
+            .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
+            .build()
+        val image = FirebaseVisionImage.fromBitmap(selectedImage)
+
+        // 2
+        val detector = FirebaseVision.getInstance().getCloudTextRecognizer(options)
+        detector.processImage(image).addOnSuccessListener { texts ->
+                processCloudTextRecognitionResult(texts)
+            }
+            .addOnFailureListener { e ->
+                e.printStackTrace()
+            }
     }
 
-    private fun looksLikeHandle(text: String) = text.matches(Regex("@(\\w+)"))
+    private fun processCloudTextRecognitionResult(texts: FirebaseVisionText?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun looksLikeHandle(text: String) = text.matches(Regex("@(\\w+)"))
+
+    class WordPair(val word: String, val handle: FirebaseVisionDocumentTextRecognizer)
+
 
 
     init{
@@ -83,19 +120,11 @@ class MainActivityViewModel : ViewModel() {
 
         // This transformation makes sure that whenever the current work Id changes the WorkStatus
         // the UI is listening to changes
-        mSavedWorkStatus = mWorkManager?.getStatusesByTagLiveData(TAG_OUTPUT)
+        mSavedWorkStatus = mWorkManager.getStatusesByTagLiveData(TAG_OUTPUT)
 
 //        mSavedSingleWorkStatus = mWorkManager?.getStatusByIdLiveData(UUID.fromString("00002415-0000-1000-8000-00805F9B34FB"))
 
-
     }
-
-    interface View {
-        fun showNoTextMessage()
-        fun showHandle(text: String, boundingBox: Rect?)
-        fun showBox(boundingBox: Rect?)
-    }
-
 
     /**
      * Setters, set the uri of loaded image
@@ -150,7 +179,7 @@ class MainActivityViewModel : ViewModel() {
      * Cancel work using the work's unique name
      */
     fun cancelWork() {
-        mWorkManager?.cancelUniqueWork(IMAGE_MANIPULATION_WORK_NAME)
+        mWorkManager.cancelUniqueWork(IMAGE_MANIPULATION_WORK_NAME)
     }
 
     fun resizeimageWork(imageView: ImageView) {
@@ -190,7 +219,7 @@ class MainActivityViewModel : ViewModel() {
         // mWorkManager?.enqueue(resizeImgWork)
 
        //for  a series of work requests
-        continuation = continuation?.then(resizeImgWork)
+        continuation = continuation.then(resizeImgWork)
 
       /*
       // Create charging constraint
@@ -199,6 +228,6 @@ class MainActivityViewModel : ViewModel() {
             .build()
 */
         // Actually start the work
-        continuation?.enqueue()
+        continuation.enqueue()
     }
 }
