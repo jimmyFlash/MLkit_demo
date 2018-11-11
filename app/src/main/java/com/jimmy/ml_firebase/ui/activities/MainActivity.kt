@@ -1,7 +1,6 @@
 package com.jimmy.ml_firebase.ui.activities
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -21,6 +20,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.work.WorkStatus
+import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.jimmy.ml_firebase.Constants
 import com.jimmy.ml_firebase.PermissionManager
@@ -31,10 +31,12 @@ import com.jimmy.ml_firebase.uidataproviders.viewmodel.MainActivityViewModel
 
 class MainActivity : AppCompatActivity() {
 
+    // draw rect around text block and enable click handler
     fun showHandle(text: String, boundingBox: Rect?) {
         binding.overlay.addText(text, boundingBox)
     }
 
+    // draws a bounding box defined by the rect boundaries
     fun showBox(boundingBox: Rect?) {
         binding.overlay.addBox(boundingBox)
     }
@@ -44,8 +46,8 @@ class MainActivity : AppCompatActivity() {
 
     private val MEDIA_PICK_CODE :Int = 1
 
-    private val REQUEST_MULTI_PERMISSION = 10
-    private var  pm: PermissionManager? = null
+    private val REQUEST_MULTI_PERMISSION = 10// permission for external storage
+    private var  pm: PermissionManager? = null// permission manager ref.
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,26 +61,35 @@ class MainActivity : AppCompatActivity() {
         // Get the ViewModel
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
 
+        // introduce  viewmodel instance to binding variable (viewmodel)
         binding.viewmodel = mViewModel
 
+        // hide progress indicator
         binding.progressBar.visibility = View.INVISIBLE
 
 
+        // set up click listener for the FAB button
         setUpNewImageListener()
 
         /*
-        handling device orientation change, need to resize the original image to fit new screen dimensions
+         handling device orientation change,
+         need to resize the original image to fit new screen dimensions & and reinitialize observers
          */
         if(mViewModel.getImageUri() != null){
             Log.e("configuration change", mViewModel.getImageUri().toString())
+
+            // clear overlay view, image view, stored blocks of text
             binding.overlay.clear()
             binding.imageView.setImageBitmap(null)
             mViewModel.resetBlocks()
+
             Handler().postDelayed({
-                mViewModel.resizeimageWork(binding.imageView)
-                mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
+
+                mViewModel.resizeimageWork(binding.imageView)// resize the image using workmanager
+                mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )// observer image process
                 //observe the changes to the state of the read text vision object
-                mViewModel.mtextBlocks?.observe(this,traceTwitterHabdles())
+                mViewModel.mtextBlocks?.observe(this,traceTwitterHandles())
+
             }, 2000)
         }
 
@@ -89,10 +100,14 @@ class MainActivity : AppCompatActivity() {
         binding.executePendingBindings()
     }
 
+    /**
+     * click handler for the FAB
+     */
     private fun setUpNewImageListener() {
 
           binding.fab.setOnClickListener {
 
+              // request permission for external storage
               pm = PermissionManager.PermissionBuilder(this, REQUEST_MULTI_PERMISSION)
                   .addPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                   .build()
@@ -100,16 +115,19 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
+    /**
+     * activity result handler
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, imageReturnedIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent)
         when (requestCode) {
             MEDIA_PICK_CODE -> if (resultCode == Activity.RESULT_OK) {
 
+                // get loaded image data from mdia select intent
                 imageReturnedIntent?.data.let {
 
-                    mViewModel.setImageUri(it.toString())// call setter method in VM to set image data
-                    if (mViewModel.getImageUri() != null) {
+                    mViewModel.setImageUri(it.toString())// call setter method in VM to set image Uri
+                    if (mViewModel.getImageUri() != null) {// validate the Uri
                         Log.e("CAM image uri", mViewModel.getImageUri().toString())
                         // resize image bitmap using VM method that calls for worker
                         mViewModel.resizeimageWork(binding.imageView)
@@ -123,10 +141,14 @@ class MainActivity : AppCompatActivity() {
         mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
 
         //observe the changes to the state of the read text vision object
-        mViewModel.mtextBlocks?.observe(this,traceTwitterHabdles())
+        mViewModel.mtextBlocks?.observe(this,traceTwitterHandles())
+
+        // Observer changes to the mtextCloud object
+        mViewModel.mtextCloud?.observe(this, traceDocumentTextInCloudHnalder())
     }
 
-    fun traceTwitterHabdles(): Observer<FirebaseVisionText>{
+    // on device ML text vision state observer
+    private fun traceTwitterHandles(): Observer<FirebaseVisionText>{
          return Observer{texts ->
 
              val blocks = texts?.textBlocks
@@ -137,9 +159,13 @@ class MainActivity : AppCompatActivity() {
              blocks?.forEach { block ->
                  block.lines.forEach { line ->
                      line.elements.forEach { element ->
+
                          // to show borders around all detected text blocks
                          //showBox(element.boundingBox)
+
+                         // look for filter text blocks for regex matching thr twitter pattern
                          if (mViewModel.looksLikeHandle(element.text)) {
+                             // draw handles around matching text blocks
                              showHandle(element.text, element.boundingBox)
                          }
                      }
@@ -148,6 +174,39 @@ class MainActivity : AppCompatActivity() {
          }
     }
 
+
+    // Cloud ML observer handler
+    private fun traceDocumentTextInCloudHnalder(): Observer<FirebaseVisionDocumentText>{
+
+        return Observer { texts ->
+            if (texts == null) {
+                Toast.makeText(this, "No text detected", Toast.LENGTH_LONG).show()
+                return@Observer
+            }
+            val resultText = texts.text
+            texts.blocks.forEach{ block ->
+                block.paragraphs.forEach{
+                    it.words.zipWithNext{a, b->
+                        // 1
+                        val word = mViewModel.wordToString(a) + mViewModel.wordToString(b)
+                        // 2
+                        MainActivityViewModel.WordPair(word, b)
+                    }
+                    .filter { wordPair -> mViewModel.looksLikeHandle(wordPair.word) }
+                    .forEach { pair ->
+                        // 3
+                        showHandle(pair.word, pair.handle.boundingBox)
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    /**
+     * observer handler for workmanager status of image resizing process
+     */
     fun workStatusesObserver(): Observer<List<WorkStatus>> {
         return Observer { listOfWorkStatuses ->
 
@@ -166,7 +225,7 @@ class MainActivity : AppCompatActivity() {
             val finished = workStatus.state.isFinished
 
             if (finished) {
-                mViewModel.isLoading.set(false)
+                mViewModel.isLoading.set(false)// set the loading boolean observable to false to hide binded loader
                 //If the WorkStatus is finished, get the output data, using workStatus.getOutputData().
                 val outputData = workStatus.outputData
 
@@ -177,12 +236,14 @@ class MainActivity : AppCompatActivity() {
 
                     val bitmapResized = MediaStore.Images.Media.getBitmap(this.contentResolver, Uri.parse(outputImageUri))
                     binding.imageView.setImageBitmap(bitmapResized)
+                    // set up firebase cloud ML listener
 //                    setUpCloudSearch(bitmapResized)
                     binding.overlay.clear()
+                    // run on device ML text recognition
                     mViewModel.runTextRecognition(bitmapResized!!)
                 }
             }else{
-                mViewModel.isLoading.set(true)
+                mViewModel.isLoading.set(true)// set observable property to true to show progress indicator
             }
 
         }
@@ -204,6 +265,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * permission request result handler
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 
         val result = when (requestCode) {

@@ -4,21 +4,16 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
 import android.graphics.Bitmap
-import android.graphics.Rect
 import android.net.Uri
 import android.text.TextUtils
-import android.util.SparseArray
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.work.*
 import com.google.firebase.ml.vision.FirebaseVision
-import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer
-import com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions
+import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
+import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer
 import com.jimmy.ml_firebase.Constants.IMAGE_MANIPULATION_WORK_NAME
@@ -28,6 +23,7 @@ import com.jimmy.ml_firebase.Constants.KEY_IMAGE_VIEW_W
 import com.jimmy.ml_firebase.Constants.TAG_OUTPUT
 import com.jimmy.ml_firebase.workers.CleanupWorker
 import com.jimmy.ml_firebase.workers.ImageResizeWorker
+import java.util.*
 
 /*
     AndroidViewModel from Lifecycle-aware components library that has context.
@@ -47,7 +43,9 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
 
     private var mSavedSingleWorkStatus: LiveData<WorkStatus>? = null
 
-     var mtextBlocks: MutableLiveData<FirebaseVisionText> = MutableLiveData()
+    var mtextBlocks: MutableLiveData<FirebaseVisionText> = MutableLiveData()
+
+    var mtextCloud: MutableLiveData<FirebaseVisionDocumentText> = MutableLiveData()
 
     val isLoading = ObservableField(false)
 
@@ -69,11 +67,11 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
 
     private fun processTextRecognitionResult(texts: FirebaseVisionText) {
         isLoading.set(false)
-        mtextBlocks?.value = texts
+        mtextBlocks.value = texts
     }
 
     fun resetBlocks(){
-        mtextBlocks?.value = null
+        mtextBlocks.value = null
     }
 
     fun runCloudTextRecognition(selectedImage: Bitmap) {
@@ -81,13 +79,13 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
         isLoading.set(true)
 
         // 1
-        val options = FirebaseVisionCloudTextRecognizerOptions.Builder()
-            .setModelType(FirebaseVisionCloudDetectorOptions.LATEST_MODEL)
+        val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
+            .setLanguageHints(Arrays.asList("en", "hi"))
             .build()
         val image = FirebaseVisionImage.fromBitmap(selectedImage)
 
         // 2
-        val detector = FirebaseVision.getInstance().getCloudTextRecognizer(options)
+        val detector = FirebaseVision.getInstance().getCloudDocumentTextRecognizer(options)
         detector.processImage(image).addOnSuccessListener { texts ->
                 processCloudTextRecognitionResult(texts)
             }
@@ -96,13 +94,16 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
             }
     }
 
-    private fun processCloudTextRecognitionResult(texts: FirebaseVisionText?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private fun processCloudTextRecognitionResult(texts: FirebaseVisionDocumentText?) {
+        isLoading.set(true)
+        mtextCloud.value = texts
     }
+
+    fun wordToString( word: FirebaseVisionDocumentText.Word): String = word.symbols.joinToString("") { it.text }
 
     fun looksLikeHandle(text: String) = text.matches(Regex("@(\\w+)"))
 
-    class WordPair(val word: String, val handle: FirebaseVisionDocumentTextRecognizer)
+    class WordPair(val word: String, val handle: FirebaseVisionDocumentText.Word)
 
 
 
