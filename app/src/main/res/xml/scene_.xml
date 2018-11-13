@@ -5,36 +5,35 @@
     <Transition
             motion:constraintSetStart="@+id/start"
             motion:constraintSetEnd="@+id/end"
-            motion:duration="1000" >
-       <!-- <OnSwipe
-                motion:touchAnchorId="@+id/button"
+            motion:duration="5000" >
+
+        <OnSwipe
+                motion:touchAnchorId="@+id/fab"
                 motion:touchAnchorSide="right"
-                motion:dragDirection="dragRight" />-->
+                motion:dragDirection="dragRight" />
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
 
-                android:id = "@+id/button"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="8dp"
-                motion:layout_constraintBottom_toBottomOf="parent"
-                motion:layout_constraintStart_toStartOf="parent"
+                android:id = "@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
                 motion:layout_constraintTop_toTopOf="parent"
+                motion:layout_constraintStart_toStartOf="parent"
                 tools:ignore="DuplicateIds"/>
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
 
-                android:id = "@+id/button"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginEnd="8dp"
+                android:id = "@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent"
-                motion:layout_constraintTop_toTopOf="parent"
                 tools:ignore="DuplicateIds"/>
     </ConstraintSet>
 

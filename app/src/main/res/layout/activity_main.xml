@@ -18,14 +18,27 @@
 
     </data>
 
+    <!--
+        app:layoutDescription=”reference” has to point to a MotionScene XML file, as we saw earlier
+
+        app:applyMotionScene=”boolean” let you apply or not the MotionScene [default=true]
+
+        app:showPaths=”boolean” display or not the motion paths [default=false]. Remember to turn off in your production build!
+
+        app:progress=”float” let you specify the transition progress from 0 to 1
+
+        app:currentState=”reference” let you force a specific ConstraintSet
+    -->
 
       <android.support.constraint.motion.MotionLayout
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               tools:background="#ffcc00"
-              tools:showPaths="true"
+              tools:showPaths="false"
               android:id="@+id/motionLayout"
-      >
+              app:layoutDescription="@xml/scene_"
+              app:applyMotionScene="false" >
+
 
           <android.support.design.widget.AppBarLayout
                   android:id="@+id/app_bar"
