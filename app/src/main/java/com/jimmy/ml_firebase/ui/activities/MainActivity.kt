@@ -327,6 +327,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        Log.e("MainActivity", "image dimentions ${binding.imageView.width} , ${binding.imageView.hashCode()}")
+
         //Animate to the end ConstraintSet//
         binding.motionLayout.transitionToEnd()
     }
