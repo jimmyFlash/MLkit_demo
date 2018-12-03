@@ -128,7 +128,9 @@ class MainActivity : AppCompatActivity() {
 
                     mViewModel.setImageUri(it.toString())// call setter method in VM to set image Uri
                     if (mViewModel.getImageUri() != null) {// validate the Uri
-                        Log.e("CAM image uri", mViewModel.getImageUri().toString())
+                        Log.e("CAM image uri", mViewModel.getImageUri().toString()  +
+                        "," + binding.imageView.width +
+                        "," + binding.imageView.height)
                         // resize image bitmap using VM method that calls for worker
                         mViewModel.resizeimageWork(binding.imageView)
                     }
