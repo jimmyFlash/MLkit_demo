@@ -54,6 +54,18 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/select_image_for_text_recognition"
+                android:scaleType="fitStart"
+                tools:src="@mipmap/ic_launcher"
+                android:layout_marginTop="?attr/actionBarSize"
+
+
+        />
+
 
         <android.support.constraint.motion.MotionLayout
                 android:layout_width="match_parent"
@@ -62,20 +74,10 @@
                 tools:showPaths="false"
                 android:id="@+id/motionLayout"
                 app:layoutDescription="@xml/scene_motionb"
-                app:applyMotionScene="true" >
+                app:applyMotionScene="true"
+                android:layout_marginTop="?attr/actionBarSize">
 
-            <ImageView
-                    android:id="@+id/image_view"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:contentDescription="@string/select_image_for_text_recognition"
-                    android:scaleType="fitStart"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf= "parent"
-                    tools:src="@mipmap/ic_launcher"
-            />
+
 
             <com.jimmy.ml_firebase.ui.customviews.TwitterGraphicOverlay
                     android:id="@+id/overlay"

@@ -328,10 +328,21 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         binding.imageView.invalidate()
-        Log.e("MainActivity", "image dimentions ${binding.imageView.width} , ${binding.imageView.height}")
+        Log.e("onStart", "image dimentions ${binding.imageView.width} , ${binding.imageView.height}")
 
         //Animate to the end ConstraintSet//
         binding.motionLayout.transitionToEnd()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e("onStart", "image dimentions ${binding.imageView.width} , ${binding.imageView.height}")
+    }
+
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        Log.e("onWindowFocusChanged", "image dimentions ${binding.imageView.width} , ${binding.imageView.height}")
     }
 
 
