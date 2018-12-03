@@ -28,7 +28,14 @@
         app:progress=”float” let you specify the transition progress from 0 to 1
 
         app:currentState=”reference” let you force a specific ConstraintSet
+
+
     -->
+
+    <android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
+
+    </android.support.design.widget.CoordinatorLayout>
 
       <android.support.constraint.motion.MotionLayout
               android:layout_width="match_parent"
@@ -36,7 +43,7 @@
               tools:background="#ffcc00"
               tools:showPaths="false"
               android:id="@+id/motionLayout"
-              app:layoutDescription="@xml/scene_"
+              app:layoutDescription="@xml/scene_motionb"
               app:applyMotionScene="false" >
 
 

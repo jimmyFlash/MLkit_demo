@@ -5,12 +5,13 @@
     <Transition
             motion:constraintSetStart="@+id/start"
             motion:constraintSetEnd="@+id/end"
-            motion:duration="5000" >
+            motion:duration="2000" >
 
-        <OnSwipe
+     <!--   <OnSwipe
                 motion:touchAnchorId="@+id/fab"
                 motion:touchAnchorSide="right"
-                motion:dragDirection="dragRight" />
+                motion:dragDirection="dragRight" />-->
+
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
