@@ -12,6 +12,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.support.constraint.motion.MotionLayout
+import android.support.constraint.motion.MotionScene
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
@@ -93,6 +95,24 @@ class MainActivity : AppCompatActivity() {
             }, 2000)
         }
 
+
+        binding.motionLayout.setTransitionListener(object: MotionLayout.TransitionListener{
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
+                //Print each floating-point number to Logcat//
+                Log.d("TAG", "Progress:$progress")
+            }
+
+            override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
+                //If our button is in the ending_set position...//
+
+                if(currentId == R.id.end) {
+
+                    //...then move it back to the starting position//
+//                    binding.motionLayout.transitionToStart()
+                }
+            }
+
+        })
        /*
            Evaluates the pending bindings, updating any Views that have expressions bound to modified
            variables. This must be run on the UI thread.
@@ -302,6 +322,13 @@ class MainActivity : AppCompatActivity() {
             binding.overlay.clear()
             mViewModel.runCloudTextRecognition(selectedImageBitmap!!)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        //Animate to the end ConstraintSet//
+        binding.motionLayout.transitionToEnd()
     }
 
 
