@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                     if (mViewModel.getImageUri() != null) {// validate the Uri
                         Log.e("CAM image uri", mViewModel.getImageUri().toString()  +
                         "," + binding.imageView.width +
-                        "," + binding.imageView.height)
+                        "," + binding.imageView.height + "extra")
                         // resize image bitmap using VM method that calls for worker
                         mViewModel.resizeimageWork(binding.imageView)
                     }
