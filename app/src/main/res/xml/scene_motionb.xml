@@ -20,9 +20,8 @@
                 android:id = "@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
-                motion:layout_constraintTop_toTopOf="parent"
-                motion:layout_constraintStart_toStartOf="parent"
+                motion:layout_constraintTop_toTopOf="@+id/hg1"
+                motion:layout_constraintStart_toStartOf="@+id/vg1"
                 tools:ignore="DuplicateIds"/>
     </ConstraintSet>
 
@@ -32,9 +31,8 @@
                 android:id = "@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
-                motion:layout_constraintBottom_toBottomOf="parent"
-                motion:layout_constraintEnd_toEndOf="parent"
+                motion:layout_constraintBottom_toBottomOf="@+id/hg2"
+                motion:layout_constraintEnd_toEndOf="@+id/vg2"
                 tools:ignore="DuplicateIds"/>
     </ConstraintSet>
 
