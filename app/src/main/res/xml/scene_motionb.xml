@@ -7,10 +7,62 @@
             motion:constraintSetEnd="@+id/end"
             motion:duration="2000" >
 
-     <!--   <OnSwipe
+     <!--   to add animation using dragging touch
+     <OnSwipe
                 motion:touchAnchorId="@+id/fab"
                 motion:touchAnchorSide="right"
                 motion:dragDirection="dragRight" />-->
+
+
+        <!--
+            motion:target: The ID of the widget that’s affected by the keyframe, which in this instance is the button widget.
+
+            motion:framePosition: The point where the keyframe is applied during the transition, ranging from the animation’s
+                starting point (0) to its ending point (100).
+
+            app:percentX , motion:percentY: Each keyframe’s position is expressed as a pair of X and Y coordinates,
+                although the result of these coordinates will be affected by the project’s motion:keyPositionType.
+
+            motion:keyPositionType: This controls how Android calculates the animation path, and by extension
+                the X and Y coordinates. The possible values are parentRelative (relative to the parent container),
+                deltaRelative (the distance between the widget’s start and end position) and pathRelative
+                (the linear path between the widget’s start and end states).
+         -->
+
+        <KeyFrameSet android:id="@+id/my_keyframe">
+            <KeyPosition
+                    motion:target="@+id/fab"
+                    motion:keyPositionType="parentRelative"
+                    motion:percentY="0.7"
+                    motion:framePosition="50"
+            />
+
+            <!--
+                android:rotation: The rotation that should be applied to the widget as it moves along the animation path.
+                app:waveShape: The shape of the oscillation. You can choose from sin, square, triangle, sawtooth, reverseSawtooth, cos, and bounce.
+                app:wavePeriod: The number of wave cycles.
+            -->
+
+            <!--  Adding oscillations with Keycycles
+
+            <KeyCycle
+                    motion:target="@+id/fab"
+                    motion:framePosition="50"
+                    android:rotation="25"
+                    motion:waveShape="sin"
+                    motion:wavePeriod="1"
+            />-->
+
+
+
+            <KeyAttribute
+                    motion:target="@id/fab"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    motion:framePosition="30" />
+
+        </KeyFrameSet>
+
 
     </Transition>
 
@@ -22,7 +74,28 @@
                 android:layout_height="wrap_content"
                 motion:layout_constraintTop_toTopOf="@+id/hg1"
                 motion:layout_constraintStart_toStartOf="@+id/vg1"
-                tools:ignore="DuplicateIds"/>
+                tools:ignore="DuplicateIds">
+
+            <!-- A CustomAttribute must include the name of the attribute (attributeName) and the value you’re using,
+                which can be any of the following:
+
+                customColorValue
+                customColorDrawableValue
+                customIntegerValue
+                customFloatValue
+                customStringValue
+                customDimension
+                customBoolean
+            -->
+
+                <!-- //Specify that you want to change the background color//-->
+                <CustomAttribute
+                    motion:attributeName="backgroundTint"
+                    motion:customColorValue="@color/colorAccent" />
+
+        </Constraint>
+
+
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -33,7 +106,13 @@
                 android:layout_height="wrap_content"
                 motion:layout_constraintBottom_toBottomOf="@+id/hg2"
                 motion:layout_constraintEnd_toEndOf="@+id/vg2"
-                tools:ignore="DuplicateIds"/>
+                tools:ignore="DuplicateIds">
+
+            <CustomAttribute
+                    motion:attributeName="backgroundTint"
+                    motion:customColorValue="@color/colorPrimaryDark" />
+
+        </Constraint>
     </ConstraintSet>
 
 </MotionScene>
