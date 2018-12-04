@@ -32,7 +32,7 @@
 
     -->
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -41,9 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.AppBarOverlay"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+   >
 
             <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -54,6 +52,8 @@
 
         </android.support.design.widget.AppBarLayout>
 
+
+
         <ImageView
                 android:id="@+id/image_view"
                 android:layout_width="match_parent"
@@ -62,6 +62,31 @@
                 android:scaleType="fitStart"
                 tools:src="@mipmap/ic_launcher"
                 android:layout_marginTop="?attr/actionBarSize"
+                tools:background="#0000ff"/>
+
+
+        <com.jimmy.ml_firebase.ui.customviews.TwitterGraphicOverlay
+                android:id="@+id/overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:background="#ff0000"
+                android:layout_marginTop="?attr/actionBarSize"
+        />
+
+
+        <ProgressBar
+                android:id="@+id/progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="@{viewmodel.isLoading ?  View.VISIBLE : View.INVISIBLE }"
+                android:background="@color/colorPrimary"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
 
 
         />
@@ -70,23 +95,12 @@
         <android.support.constraint.motion.MotionLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:background="#ffcc00"
+
                 tools:showPaths="false"
                 android:id="@+id/motionLayout"
                 app:layoutDescription="@xml/scene_motionb"
                 app:applyMotionScene="true"
                 android:layout_marginTop="?attr/actionBarSize">
-
-
-
-            <com.jimmy.ml_firebase.ui.customviews.TwitterGraphicOverlay
-                    android:id="@+id/overlay"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
 
             <android.support.constraint.Guideline
@@ -119,22 +133,6 @@
                     app:layout_constraintGuide_percent="0.98"/>
 
 
-            <ProgressBar
-                    android:id="@+id/progress_bar"
-                    style="@style/Widget.AppCompat.ProgressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    android:visibility="@{viewmodel.isLoading ?  View.VISIBLE : View.INVISIBLE }"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:background="@color/colorPrimary"
-                    android:padding="10dp"
-                    tools:visibility="gone"
-
-            />
 
 
 
@@ -151,9 +149,15 @@
                     android:visibility="@{viewmodel.isLoading ?  View.INVISIBLE : View.VISIBLE }"
             />
 
+
+
         </android.support.constraint.motion.MotionLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+
+
+
+
+    </android.support.constraint.ConstraintLayout>
 
 
 

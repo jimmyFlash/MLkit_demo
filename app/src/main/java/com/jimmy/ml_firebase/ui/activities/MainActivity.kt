@@ -66,10 +66,6 @@ class MainActivity : AppCompatActivity() {
         // introduce  viewmodel instance to binding variable (viewmodel)
         binding.viewmodel = mViewModel
 
-        // hide progress indicator
-        binding.progressBar.visibility = View.INVISIBLE
-
-
         // set up click listener for the FAB button
         setUpNewImageListener()
 
