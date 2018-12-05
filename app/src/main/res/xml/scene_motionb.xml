@@ -28,20 +28,22 @@
                 deltaRelative (the distance between the widget’s start and end position) and pathRelative
                 (the linear path between the widget’s start and end states).
          -->
-
         <KeyFrameSet android:id="@+id/my_keyframe">
+
+          <!--add manual anchor point to the motion path to curve it -->
+          <!--
             <KeyPosition
                     motion:target="@+id/fab"
+                    motion:pathMotionArc="none"
                     motion:keyPositionType="parentRelative"
                     motion:percentY="0.7"
                     motion:framePosition="50"
             />
-
-            <!--
-                android:rotation: The rotation that should be applied to the widget as it moves along the animation path.
-                app:waveShape: The shape of the oscillation. You can choose from sin, square, triangle, sawtooth, reverseSawtooth, cos, and bounce.
-                app:wavePeriod: The number of wave cycles.
             -->
+
+            <!--android:rotation: The rotation that should be applied to the widget as it moves along the animation path.-->
+            <!--app:waveShape: The shape of the oscillation. You can choose from sin, square, triangle, sawtooth, reverseSawtooth, cos, and bounce.-->
+            <!--app:wavePeriod: The number of wave cycles.-->
 
             <!--  Adding oscillations with Keycycles
 
@@ -51,7 +53,8 @@
                     android:rotation="25"
                     motion:waveShape="sin"
                     motion:wavePeriod="1"
-            />-->
+            />
+            -->
 
 
 
@@ -67,6 +70,7 @@
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
+        <!--  motion:pathMotionArc,  allows for creating curved paths in vertical, or horizontal motion path -->
         <Constraint
 
                 android:id = "@+id/fab"
@@ -74,11 +78,13 @@
                 android:layout_height="wrap_content"
                 motion:layout_constraintTop_toTopOf="@+id/hg1"
                 motion:layout_constraintStart_toStartOf="@+id/vg1"
-                tools:ignore="DuplicateIds">
+                tools:ignore="DuplicateIds"
+                motion:pathMotionArc="startVertical"
+                motion:transitionEasing = "accelerate"
+        >
 
             <!-- A CustomAttribute must include the name of the attribute (attributeName) and the value you’re using,
                 which can be any of the following:
-
                 customColorValue
                 customColorDrawableValue
                 customIntegerValue
