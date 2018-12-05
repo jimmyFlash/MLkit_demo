@@ -203,7 +203,7 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
 
 
         //to start a series of work requests
-      var continuation = mWorkManager?.beginUniqueWork(
+      var continuation = mWorkManager.beginUniqueWork(
             IMAGE_MANIPULATION_WORK_NAME,
             ExistingWorkPolicy.REPLACE,
             OneTimeWorkRequest.from(CleanupWorker::class.java)

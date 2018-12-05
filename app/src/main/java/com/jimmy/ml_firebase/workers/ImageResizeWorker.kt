@@ -26,9 +26,9 @@ data class ImageResizeWorker(val ctx : Context, val workP : WorkerParameters) : 
 
         // get the image uri from the data object passed as input
         val resourceUri = workP.inputData
-        var imgUri = resourceUri.getString(Constants.KEY_IMAGE_URI)
-        var imgW = resourceUri.getInt(Constants.KEY_IMAGE_VIEW_W, 0)
-        var imgH = resourceUri.getInt(Constants.KEY_IMAGE_VIEW_H, 0)
+        val imgUri = resourceUri.getString(Constants.KEY_IMAGE_URI)
+        val imgW = resourceUri.getInt(Constants.KEY_IMAGE_VIEW_W, 0)
+        val imgH = resourceUri.getInt(Constants.KEY_IMAGE_VIEW_H, 0)
 
         try{
             if (TextUtils.isEmpty(imgUri)) {
@@ -54,7 +54,7 @@ data class ImageResizeWorker(val ctx : Context, val workP : WorkerParameters) : 
             // Technically WorkManager will return WorkerResult.FAILURE
             // but it's best to be explicit about it.
             // Thus if there were errors, we're return FAILURE
-            Log.e(TAG, "Error applying blur", throwable)
+            Log.e(TAG, "Error applying resizing", throwable)
 
             return Result.FAILURE
         }

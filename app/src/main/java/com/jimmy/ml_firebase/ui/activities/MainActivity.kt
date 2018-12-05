@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_MULTI_PERMISSION = 10// permission for external storage
     private var  pm: PermissionManager? = null// permission manager ref.
 
+    private var fVT : FirebaseVisionText? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,6 +141,11 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             MEDIA_PICK_CODE -> if (resultCode == Activity.RESULT_OK) {
 
+                binding.overlay.clear()
+                binding.imageView.setImageBitmap(null)
+                binding.imageView.setImageDrawable(getDrawable(R.drawable.ic_launcher_foreground))
+                mViewModel.resetBlocks()
+
                 // get loaded image data from mdia select intent
                 imageReturnedIntent?.data.let {
 
@@ -159,15 +166,19 @@ class MainActivity : AppCompatActivity() {
         mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
 
         //observe the changes to the state of the read text vision object
-        mViewModel.mtextBlocks?.observe(this,traceTwitterHandles())
+        mViewModel.mtextBlocks.observe(this,traceTwitterHandles())
 
         // Observer changes to the mtextCloud object
-        mViewModel.mtextCloud?.observe(this, traceDocumentTextInCloudHnalder())
+        mViewModel.mtextCloud.observe(this, traceDocumentTextInCloudHnalder())
     }
 
     // on device ML text vision state observer
     private fun traceTwitterHandles(): Observer<FirebaseVisionText>{
          return Observer{texts ->
+
+             Log.e("-----------", "${texts?.textBlocks?.size}  &  ${fVT == texts}")
+
+             fVT = texts
 
              val blocks = texts?.textBlocks
              if (blocks?.size == 0) {
