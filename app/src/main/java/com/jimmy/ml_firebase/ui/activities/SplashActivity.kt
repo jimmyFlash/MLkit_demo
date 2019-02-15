@@ -1,50 +1,36 @@
-/*
- *
- * Copyright (c) 2018 Razeware LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
- * distribute, sublicense, create a derivative work, and/or sell copies of the
- * Software in any work that is designed, intended, or marketed for pedagogical or
- * instructional purposes related to programming, coding, application development,
- * or information technology.  Permission for such use, copying, modification,
- * merger, publication, distribution, sublicensing, creation of derivative works,
- * or sale is expressly withheld.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 
-package com.raywenderlich.android.twittersnap
 
-import android.content.Intent
+package com.jimmy.ml_firebase.ui.activities
+
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.jimmy.ml_firebase.ui.activities.MainActivity
+import android.view.View
+import com.jimmy.ml_firebase.R
+import com.jimmy.ml_firebase.databinding.ActivitySplashBinding
+import com.jimmy.ml_firebase.ui.start
+import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivitySplashBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-        // todo need to add a handler for the with timer to remove the screen and go to main screen
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
 
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        twitterSnap.setOnClickListener {
+
+            MainActivity::class.start(this@SplashActivity, true)
+
+        }
+
+        deliciousFood.setOnClickListener {
+
+            ImageRecognitionActivity::class.start(this@SplashActivity, true)
+        }
+
     }
 }

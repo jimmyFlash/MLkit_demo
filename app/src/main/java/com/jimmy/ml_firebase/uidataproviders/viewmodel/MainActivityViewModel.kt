@@ -87,8 +87,8 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
         // 2
         val detector = FirebaseVision.getInstance().getCloudDocumentTextRecognizer(options)
         detector.processImage(image).addOnSuccessListener { texts ->
-                processCloudTextRecognitionResult(texts)
-            }
+            processCloudTextRecognitionResult(texts)
+        }
             .addOnFailureListener { e ->
                 e.printStackTrace()
             }
@@ -171,10 +171,10 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
     fun getOutputStatus(): LiveData<List<WorkStatus>>? {
         return mSavedWorkStatus
     }
-  /*  // Add a getter method for mSavedWorkStatus
-    fun getOutputStatusSingleWork(): LiveData<WorkStatus>? {
-        return mSavedSingleWorkStatus
-    }*/
+    /*  // Add a getter method for mSavedWorkStatus
+      fun getOutputStatusSingleWork(): LiveData<WorkStatus>? {
+          return mSavedSingleWorkStatus
+      }*/
 
     /**
      * Cancel work using the work's unique name
@@ -203,7 +203,7 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
 
 
         //to start a series of work requests
-      var continuation = mWorkManager.beginUniqueWork(
+        var continuation = mWorkManager.beginUniqueWork(
             IMAGE_MANIPULATION_WORK_NAME,
             ExistingWorkPolicy.REPLACE,
             OneTimeWorkRequest.from(CleanupWorker::class.java)
@@ -212,22 +212,22 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
 
         // single worker request implementation
         val resizeImgWork =  OneTimeWorkRequestBuilder<ImageResizeWorker>()
-        .setInputData(createInputDataForUri(imageView))
-        .addTag(TAG_OUTPUT)
-        .build()
+            .setInputData(createInputDataForUri(imageView))
+            .addTag(TAG_OUTPUT)
+            .build()
 
         // for using single work process request
         // mWorkManager?.enqueue(resizeImgWork)
 
-       //for  a series of work requests
+        //for  a series of work requests
         continuation = continuation.then(resizeImgWork)
 
-      /*
-      // Create charging constraint
-        val constraints = Constraints.Builder()
-            .setRequiresCharging(true)
-            .build()
-*/
+        /*
+        // Create charging constraint
+          val constraints = Constraints.Builder()
+              .setRequiresCharging(true)
+              .build()
+  */
         // Actually start the work
         continuation.enqueue()
     }

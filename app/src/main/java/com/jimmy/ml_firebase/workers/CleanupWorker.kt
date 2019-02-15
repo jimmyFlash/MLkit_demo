@@ -17,15 +17,15 @@ data class CleanupWorker(val ctx : Context, val workP : WorkerParameters) : Work
             val outputDirectory = File(applicationContext.filesDir, Constants.OUTPUT_PATH)
             if (outputDirectory.exists()) {
                 val entries = outputDirectory.listFiles()
-                  if (entries != null && entries.isNotEmpty()) {
-                      for ( entry in  entries) {
-                          val name = entry.name
-                          if (!TextUtils.isEmpty(name) && (name.endsWith(".png") || name.endsWith(".jpg")) ) {
-                              val deleted = entry.delete()
-                              Log.e(TAG, String.format("Deleted %s - %s",  name, deleted))
-                          }
-                      }
-                  }
+                if (entries != null && entries.isNotEmpty()) {
+                    for ( entry in  entries) {
+                        val name = entry.name
+                        if (!TextUtils.isEmpty(name) && (name.endsWith(".png") || name.endsWith(".jpg")) ) {
+                            val deleted = entry.delete()
+                            Log.e(TAG, String.format("Deleted %s - %s",  name, deleted))
+                        }
+                    }
+                }
             }
             return Result.SUCCESS
         } catch ( exception : Exception) {

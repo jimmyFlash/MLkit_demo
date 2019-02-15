@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.activities.SplashActivity"
+            android:background="@color/colorAccent">
+
+        <android.support.constraint.Guideline
+                android:id="@+id/g1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.30"
+        />
+        <android.support.constraint.Guideline
+                android:id="@+id/g2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.7"
+        />
+
+        <com.jimmy.ml_firebase.ui.customviews.MLRoundedImagView
+                android:id="@+id/twitterSnap"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/twitterhandle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/g1"
+                app:layout_constraintEnd_toEndOf="@id/g1"
+                app:circle_radius="0"
+        />
+
+
+        <com.jimmy.ml_firebase.ui.customviews.MLRoundedImagView
+                android:id="@+id/deliciousFood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/delicious_food"
+                android:src="@drawable/food"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                app:layout_constraintEnd_toEndOf="@id/g2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="@id/g2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:circle_radius="0"
+        />
+
+        <android.support.constraint.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imgGroup"
+                app:constraint_referenced_ids="twitterSnap,deliciousFood"
+        />
+
+
+        <android.support.constraint.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/lblGroup"
+                app:constraint_referenced_ids="textView,textView2"/>
+
+
+        <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/app_name"
+                app:layout_constraintTop_toBottomOf="@+id/twitterSnap"
+                app:layout_constraintStart_toStartOf="@id/g1"
+                app:layout_constraintEnd_toEndOf="@id/g1"
+                android:textColor="@android:color/white"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        />
+
+        <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delicious_food"
+                app:layout_constraintEnd_toEndOf="@id/g2"
+                app:layout_constraintStart_toEndOf="@id/g2"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView"
+                android:textColor="@android:color/white"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        />
+
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

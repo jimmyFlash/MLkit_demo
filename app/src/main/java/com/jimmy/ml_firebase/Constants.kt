@@ -20,5 +20,7 @@ object Constants {
     val TAG_OUTPUT_ID = "jimmyjojoojoijoijoi"
     val OUTPUT_PATH = "blur_filter_outputs"
 
+    val PERMISSION_REQUEST_CODE = 1
+
 
 }// Ensures this class is never instantiated

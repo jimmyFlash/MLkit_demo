@@ -4,6 +4,8 @@
           package="com.jimmy.ml_firebase">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
             android:allowBackup="true"
@@ -12,16 +14,29 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
+            android:name=".ApplicationClass"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
                 android:name=".ui.activities.MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+                android:name=".ui.activities.ImageRecognitionActivity"
+                android:label="@string/delicious_food">
+
+
+        </activity>
+        <activity
+                android:name=".ui.activities.SplashActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
     </application>
 

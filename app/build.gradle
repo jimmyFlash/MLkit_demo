@@ -63,16 +63,24 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     // life cycle aware components lib
     implementation 'android.arch.lifecycle:extensions:' + rootProject.archLifecycleVersion
-    kapt 'android.arch.lifecycle:compiler:' + rootProject.archLifecycleVersion
+    kapt "android.arch.lifecycle:common-java8:1.1.1"
+
     // work manager dependency
-    //    implementation "android.arch.work:work-runtime:$work_version"
+    //implementation "android.arch.work:work-runtime:$work_version"
     implementation "android.arch.work:work-runtime-ktx:$work_version"
+
     // constraint layout with motionlayout support
     implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
+
     implementation "com.google.firebase:firebase-core:" + rootProject.firebaseCore
     implementation "com.google.firebase:firebase-ml-vision:" + rootProject.firebaseMlVision
+    implementation "com.google.firebase:firebase-ml-vision-image-label-model:" + rootProject.firebaseMlImageLabeling
+
     implementation 'com.android.support:exifinterface:28.0.0'
+
     implementation 'com.android.support:support-v4:28.0.0'
+
+    implementation 'com.mindorks:paracamera:0.2.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

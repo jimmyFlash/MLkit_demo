@@ -1,4 +1,4 @@
-package com.jimmy.ml_firebase;
+package com.jimmy.ml_firebase.permissions;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import com.jimmy.ml_firebase.R;
 
 import java.util.ArrayList;
 

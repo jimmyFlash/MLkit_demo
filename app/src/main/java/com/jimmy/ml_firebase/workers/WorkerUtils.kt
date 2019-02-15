@@ -94,7 +94,7 @@ object WorkerUtils {
         }
     }
 
-     fun getImageUri(context: Context, inImage: Bitmap): Uri {
+    fun getImageUri(context: Context, inImage: Bitmap): Uri {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(context.contentResolver, inImage, "Title", "Resized image")

@@ -13,19 +13,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.support.constraint.motion.MotionLayout
-import android.support.constraint.motion.MotionScene
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.work.WorkStatus
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.jimmy.ml_firebase.Constants
-import com.jimmy.ml_firebase.PermissionManager
+import com.jimmy.ml_firebase.permissions.PermissionManager
 import com.jimmy.ml_firebase.R
 import com.jimmy.ml_firebase.databinding.ActivityMainBinding
 import com.jimmy.ml_firebase.uidataproviders.viewmodel.MainActivityViewModel
@@ -88,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 mViewModel.resizeimageWork(binding.imageView)// resize the image using workmanager
                 mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )// observer image process
                 //observe the changes to the state of the read text vision object
-                mViewModel.mtextBlocks?.observe(this,traceTwitterHandles())
+                mViewModel.mtextBlocks.observe(this,traceTwitterHandles())
 
             }, 2000)
         }
@@ -111,10 +109,10 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-       /*
-           Evaluates the pending bindings, updating any Views that have expressions bound to modified
-           variables. This must be run on the UI thread.
-       */
+        /*
+            Evaluates the pending bindings, updating any Views that have expressions bound to modified
+            variables. This must be run on the UI thread.
+        */
         binding.executePendingBindings()
     }
 
@@ -123,12 +121,12 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setUpNewImageListener() {
 
-          binding.fab.setOnClickListener {
+        binding.fab.setOnClickListener {
 
-              // request permission for external storage
-              pm = PermissionManager.PermissionBuilder(this, REQUEST_MULTI_PERMISSION)
-                  .addPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                  .build()
+            // request permission for external storage
+            pm = PermissionManager.PermissionBuilder(this, REQUEST_MULTI_PERMISSION)
+                .addPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .build()
         }
     }
 
@@ -152,8 +150,8 @@ class MainActivity : AppCompatActivity() {
                     mViewModel.setImageUri(it.toString())// call setter method in VM to set image Uri
                     if (mViewModel.getImageUri() != null) {// validate the Uri
                         Log.e("CAM image uri", mViewModel.getImageUri().toString()  +
-                        "," + binding.imageView.width +
-                        "," + binding.imageView.height + "extra")
+                                "," + binding.imageView.width +
+                                "," + binding.imageView.height + "extra")
                         // resize image bitmap using VM method that calls for worker
                         mViewModel.resizeimageWork(binding.imageView)
                     }
@@ -174,33 +172,33 @@ class MainActivity : AppCompatActivity() {
 
     // on device ML text vision state observer
     private fun traceTwitterHandles(): Observer<FirebaseVisionText>{
-         return Observer{texts ->
+        return Observer{texts ->
 
-             Log.e("-----------", "${texts?.textBlocks?.size}  &  ${fVT == texts}")
+            Log.e("-----------", "${texts?.textBlocks?.size}  &  ${fVT == texts}")
 
-             fVT = texts
+            fVT = texts
 
-             val blocks = texts?.textBlocks
-             if (blocks?.size == 0) {
-                 Toast.makeText(this, "No text detected", Toast.LENGTH_LONG).show()
-                 return@Observer
-             }
-             blocks?.forEach { block ->
-                 block.lines.forEach { line ->
-                     line.elements.forEach { element ->
+            val blocks = texts?.textBlocks
+            if (blocks?.size == 0) {
+                Toast.makeText(this, "No text detected", Toast.LENGTH_LONG).show()
+                return@Observer
+            }
+            blocks?.forEach { block ->
+                block.lines.forEach { line ->
+                    line.elements.forEach { element ->
 
-                         // to show borders around all detected text blocks
-                         //showBox(element.boundingBox)
+                        // to show borders around all detected text blocks
+                        //showBox(element.boundingBox)
 
-                         // look for filter text blocks for regex matching thr twitter pattern
-                         if (mViewModel.looksLikeHandle(element.text)) {
-                             // draw handles around matching text blocks
-                             showHandle(element.text, element.boundingBox)
-                         }
-                     }
-                 }
-             }
-         }
+                        // look for filter text blocks for regex matching thr twitter pattern
+                        if (mViewModel.looksLikeHandle(element.text)) {
+                            // draw handles around matching text blocks
+                            showHandle(element.text, element.boundingBox)
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -221,11 +219,11 @@ class MainActivity : AppCompatActivity() {
                         // 2
                         MainActivityViewModel.WordPair(word, b)
                     }
-                    .filter { wordPair -> mViewModel.looksLikeHandle(wordPair.word) }
-                    .forEach { pair ->
-                        // 3
-                        showHandle(pair.word, pair.handle.boundingBox)
-                    }
+                        .filter { wordPair -> mViewModel.looksLikeHandle(wordPair.word) }
+                        .forEach { pair ->
+                            // 3
+                            showHandle(pair.word, pair.handle.boundingBox)
+                        }
                 }
             }
 
@@ -302,18 +300,18 @@ class MainActivity : AppCompatActivity() {
         val result = when (requestCode) {
             REQUEST_MULTI_PERMISSION-> {
 
-                    val allSet = pm!!.multiplePermissionProcessor(permissions, grantResults)
-                    if (allSet) {
+                val allSet = pm!!.multiplePermissionProcessor(permissions, grantResults)
+                if (allSet) {
 
-                        Log.e("PERMISSIOOOON", "ALL GRANTED")
-                        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                        startActivityForResult(intent, MEDIA_PICK_CODE)
-                    } else {
-                        val deniedPerm = pm!!.deniedPermissionsList
-                        println("PERMISSIOOOON DENIED ${deniedPerm.size} deniedPerm.toString()")
-                        // can check if a certain permission you're instrested in exits is denied, if not you proceed or halt
-                    }
+                    Log.e("PERMISSIOOOON", "ALL GRANTED")
+                    val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    startActivityForResult(intent, MEDIA_PICK_CODE)
+                } else {
+                    val deniedPerm = pm!!.deniedPermissionsList
+                    println("PERMISSIOOOON DENIED ${deniedPerm.size} deniedPerm.toString()")
+                    // can check if a certain permission you're instrested in exits is denied, if not you proceed or halt
                 }
+            }
             else -> {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults)
             }
