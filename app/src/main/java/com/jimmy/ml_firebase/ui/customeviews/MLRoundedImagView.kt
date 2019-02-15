@@ -72,16 +72,9 @@ class MLRoundedImagView (context: Context, attrs: AttributeSet) : ImageView(cont
          fun getCroppedBitmap(bitmap : Bitmap, radius : Int, view : View?  ) : Bitmap{
 
 
-             val sbmp = bitmap
+             var sbmp = bitmap
 
-            /* val sbmp = if(bitmap.width != radius || bitmap.height != radius){
-                 val smallest: Int = Math.min(bitmap.width, bitmap.height)
-                 val factor = smallest / radius
-                 Bitmap.createScaledBitmap(bitmap, bitmap.width / factor
-                     , bitmap.height / factor, false)
-             }else{
-                 bitmap
-             }*/
+
 
              var bmpW = bitmap.width
              var bmpH = bitmap.height
@@ -89,13 +82,22 @@ class MLRoundedImagView (context: Context, attrs: AttributeSet) : ImageView(cont
              if(view != null){
                  bmpW = view.width
                  bmpH = view.height
+
+                 if(bitmap.width != bmpW){
+                     val smallest: Int = Math.min(bitmap.width, view.width)
+                     val factor = smallest.toFloat() / bitmap.width.toFloat()
+
+                     Log.e(">>>>>>>>>>>", "smallest: $smallest  / factor: $factor")
+                     sbmp = Bitmap.createScaledBitmap(bitmap, (bitmap.width * factor).toInt()
+                         , (bitmap.height * factor).toInt(), false)
+                 }
              }
-             var output:Bitmap = Bitmap.createBitmap(bmpW, bmpW, Bitmap.Config.ARGB_8888)
+             var output:Bitmap = Bitmap.createBitmap(sbmp.width, sbmp.width, Bitmap.Config.ARGB_8888)
 
              val canvas = Canvas(output)
 
              val paint = Paint()
-             var rect = Rect(0,0, radius, radius)
+             var rect = Rect(0,0, sbmp.width, sbmp.width)
 
              paint.isAntiAlias = true
              paint.isFilterBitmap = true
