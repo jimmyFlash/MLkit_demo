@@ -11,7 +11,7 @@
     </declare-styleable>
 
     <style name="Widget.WaveView" parent="@android:style/Widget">
-        <item name="waveStrokeWidth">1dp</item>
+        <item name="waveStrokeWidth">2dp</item>
         <item name="waveColor">@color/colorPrimary</item>
         <item name="waveGap">16dp</item>
     </style>

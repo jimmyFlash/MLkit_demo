@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.graphics.Path
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
@@ -23,14 +24,23 @@ class WavesView @JvmOverloads constructor(context: Context,
                  attrs: AttributeSet? = null,
                  defStyleAttr: Int = R.attr.wavesViewStyle) : View(context, attrs, defStyleAttr) {
 
+
+    // color
     private val wavePaint: Paint
+
+    // gap between shapes
     private val waveGap: Float
 
+    // positioning and radius
     private var maxRadius = 0f
     private var center = PointF(0f, 0f)
     private var initialRadius = 0f
 
+    // to animate the circles/stars
     private var waveAnimator: ValueAnimator? = null
+
+    //to draw the star shape
+    private val wavePath = Path()
 
     init {
         val attrs_ = context.obtainStyledAttributes(attrs, R.styleable.WavesView, defStyleAttr, 0)
@@ -38,7 +48,7 @@ class WavesView @JvmOverloads constructor(context: Context,
         //init paint with custom attrs
         wavePaint = Paint(ANTI_ALIAS_FLAG).apply {
             color = attrs_.getColor(R.styleable.WavesView_waveColor, 0)
-            strokeWidth = attrs_.getDimension(R.styleable.WavesView_waveStrokeWidth, 0f)
+            strokeWidth = attrs_.getDimension(R.styleable.WavesView_waveStrokeWidth, 10f)
             style = Paint.Style.STROKE
         }
 
@@ -46,14 +56,22 @@ class WavesView @JvmOverloads constructor(context: Context,
         attrs_.recycle()
     }
 
+    // define setter for the radius offeset
     private var waveRadiusOffset = 0f
         set(value) {
             field = value
+//            call postInvalidateOnAnimation() in the setter to redraw our view’s next frame, makes the animation work
             postInvalidateOnAnimation()
         }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+
+        /*
+        creating a value animator that runs for 1.5 seconds, repeating in an endless loop.
+        On every animation frame, the waveRadiusOffset will be updated — waveRadiusOffset is the value that tracks the
+        circle expansion from its original position
+         */
 
         waveAnimator = ValueAnimator.ofFloat(0f, waveGap).apply {
             addUpdateListener {
@@ -68,7 +86,7 @@ class WavesView @JvmOverloads constructor(context: Context,
     }
 
     override fun onDetachedFromWindow() {
-        waveAnimator?.cancel()
+        waveAnimator?.cancel()// stop animation
         super.onDetachedFromWindow()
     }
 
@@ -83,18 +101,62 @@ class WavesView @JvmOverloads constructor(context: Context,
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        //draw circles separated by a space the size of waveGap
-       /* var currentRadius = initialRadius
-        while (currentRadius < maxRadius) {
-            canvas!!.drawCircle(center.x, center.y, currentRadius, wavePaint)
-            currentRadius += waveGap
-        }*/
-
-        //draw circles separated by a space the size of waveGap
-        var currentRadius = initialRadius + waveRadiusOffset
+        //draw circles separated by a space the size of waveGap (not animated)
+       /*
+        var currentRadius = initialRadius
         while (currentRadius < maxRadius) {
             canvas.drawCircle(center.x, center.y, currentRadius, wavePaint)
             currentRadius += waveGap
         }
+        */
+
+        //draw circles separated by a space the size of waveGap
+//        onDraw runs using the new offset in order to simulate the animation.
+        var currentRadius = initialRadius + waveRadiusOffset
+        while (currentRadius < maxRadius) {
+            // draw circles
+//            canvas.drawCircle(center.x, center.y, currentRadius, wavePaint)
+
+            // drw star shape using path
+            val path = createStarPath(currentRadius, wavePath)
+            canvas.drawPath(path, wavePaint)
+
+            // update radius
+            currentRadius += waveGap
+        }
+
+    }
+
+    /**
+     * draws a star shape
+     */
+    private fun createStarPath( radius: Float, path: Path = Path(), points: Int = 20 ): Path {
+        path.reset()
+        val pointDelta = 0.7f // difference between the "far" and "close" points from the center
+        val angleInRadians = 2.0 * Math.PI / points // essentially 360/20 or 18 degrees, angle each line should be drawn
+        val startAngleInRadians = 0.0 //starting to draw star at 0 degrees
+
+        //move pointer to 0 degrees relative to the center of the screen
+        path.moveTo(
+            center.x + (radius * pointDelta * Math.cos(startAngleInRadians)).toFloat(),
+            center.y + (radius * pointDelta * Math.sin(startAngleInRadians)).toFloat()
+        )
+
+        //create a line between all the points in the star
+        for (i in 1 until points) {
+            val hypotenuse = if (i % 2 == 0) {
+                //by reducing the distance from the circle every other points, we create the "dip" in the star
+                pointDelta * radius
+            } else {
+                radius
+            }
+
+            val nextPointX = center.x + (hypotenuse * Math.cos(startAngleInRadians - angleInRadians * i)).toFloat()
+            val nextPointY = center.y + (hypotenuse * Math.sin(startAngleInRadians - angleInRadians * i)).toFloat()
+            path.lineTo(nextPointX, nextPointY)
+        }
+
+        path.close()
+        return path
     }
 }
