@@ -80,13 +80,20 @@ class WavesView @JvmOverloads constructor(context: Context,
     }
 
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         //draw circles separated by a space the size of waveGap
-        var currentRadius = initialRadius
+       /* var currentRadius = initialRadius
         while (currentRadius < maxRadius) {
             canvas!!.drawCircle(center.x, center.y, currentRadius, wavePaint)
+            currentRadius += waveGap
+        }*/
+
+        //draw circles separated by a space the size of waveGap
+        var currentRadius = initialRadius + waveRadiusOffset
+        while (currentRadius < maxRadius) {
+            canvas.drawCircle(center.x, center.y, currentRadius, wavePaint)
             currentRadius += waveGap
         }
     }
