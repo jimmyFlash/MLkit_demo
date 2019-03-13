@@ -21,7 +21,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layerType="software"
+                />
+        <!--android:layerType="software"-->
 
         <android.support.constraint.Guideline
                 android:id="@+id/g1"
@@ -38,7 +41,7 @@
                 app:layout_constraintGuide_percent="0.7"
         />
 
-        <com.jimmy.ml_firebase.ui.customviews.MLRoundedImagView
+        <com.jimmy.ml_firebase.ui.customeviews.MLRoundedImagView
                 android:id="@+id/twitterSnap"
                 android:layout_width="140dp"
                 android:layout_height="140dp"
@@ -53,14 +56,12 @@
         />
 
 
-        <com.jimmy.ml_firebase.ui.customviews.MLRoundedImagView
+        <com.jimmy.ml_firebase.ui.customeviews.MLRoundedImagView
                 android:id="@+id/deliciousFood"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/delicious_food"
                 android:src="@drawable/food"
-                android:adjustViewBounds="true"
-                android:scaleType="centerInside"
                 app:layout_constraintEnd_toEndOf="@id/g2"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="@id/g2"

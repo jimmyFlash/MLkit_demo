@@ -2,15 +2,13 @@ package com.jimmy.ml_firebase.ui.customeviews
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
+import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
-import android.graphics.Path
-import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import com.jimmy.ml_firebase.R
+
 
 /**
  *
@@ -42,6 +40,18 @@ class WavesView @JvmOverloads constructor(context: Context,
     //to draw the star shape
     private val wavePath = Path()
 
+    private val gradientPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        // Highlight only the areas already touched on the canvas
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    }
+
+    // gradient colors
+    private val green = Color.GREEN
+    private val white = Color.WHITE
+    private val primaryDark = context.getColor(R.color.colorPrimary)
+    // solid green in the center, transparent green at the edges
+    private val gradientColors =
+        intArrayOf(primaryDark, modifyAlpha(white, 0.8f),  modifyAlpha(primaryDark, 0.0f))
     init {
         val attrs_ = context.obtainStyledAttributes(attrs, R.styleable.WavesView, defStyleAttr, 0)
 
@@ -77,7 +87,7 @@ class WavesView @JvmOverloads constructor(context: Context,
             addUpdateListener {
                 waveRadiusOffset = it.animatedValue as Float
             }
-            duration = 1500L
+            duration = 3000L
             repeatMode = ValueAnimator.RESTART
             repeatCount = ValueAnimator.INFINITE
             interpolator = LinearInterpolator()
@@ -93,8 +103,14 @@ class WavesView @JvmOverloads constructor(context: Context,
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         //set the center of all circles to be center of the view
         center.set(w / 2f, h / 2f)
-        maxRadius = Math.hypot(center.x.toDouble(), center.y.toDouble()).toFloat()
+        maxRadius = Math.hypot(center.y.toDouble()*1.5, center.y.toDouble()*1.5).toFloat()
         initialRadius = w / waveGap
+
+        //Create gradient after getting sizing information
+        gradientPaint.shader = RadialGradient(
+            center.x, center.y, maxRadius,
+            gradientColors, null, Shader.TileMode.CLAMP
+        )
     }
 
 
@@ -120,6 +136,7 @@ class WavesView @JvmOverloads constructor(context: Context,
             // drw star shape using path
             val path = createStarPath(currentRadius, wavePath)
             canvas.drawPath(path, wavePaint)
+            canvas.drawPaint(gradientPaint)
 
             // update radius
             currentRadius += waveGap
@@ -158,5 +175,10 @@ class WavesView @JvmOverloads constructor(context: Context,
 
         path.close()
         return path
+    }
+
+
+    private fun modifyAlpha(color: Int, alpha: Float): Int {
+        return color and 0x00ffffff or ((alpha * 255).toInt() shl 24)
     }
 }
