@@ -23,13 +23,13 @@ class SplashActivity : AppCompatActivity() {
 
         twitterSnap.setOnClickListener {
 
-            MainActivity::class.start(this@SplashActivity, true)
+            MainActivity::class.start(this@SplashActivity, false)
 
         }
 
         deliciousFood.setOnClickListener {
 
-            ImageRecognitionActivity::class.start(this@SplashActivity, true)
+            ImageRecognitionActivity::class.start(this@SplashActivity, false)
         }
 
     }
