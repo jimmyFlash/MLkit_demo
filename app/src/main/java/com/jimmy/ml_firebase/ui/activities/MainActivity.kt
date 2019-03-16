@@ -77,12 +77,10 @@ class MainActivity : AppCompatActivity() {
             Log.e("configuration change", mViewModel.getImageUri().toString())
 
             // clear overlay view, image view, stored blocks of text
-            binding.overlay.clear()
-            binding.imageView.setImageBitmap(null)
-            mViewModel.resetBlocks()
+            resetObservables()
 
             Handler().postDelayed({
-
+//todo check if you need to remove this after moving observers to activity creation
                 mViewModel.resizeimageWork(binding.imageView)// resize the image using workmanager
                 mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )// observer image process
                 //observe the changes to the state of the read text vision object
@@ -114,6 +112,11 @@ class MainActivity : AppCompatActivity() {
             variables. This must be run on the UI thread.
         */
         binding.executePendingBindings()
+
+        resetObservables()
+        addObservers()
+
+
     }
 
     /**
@@ -139,10 +142,7 @@ class MainActivity : AppCompatActivity() {
         when (requestCode) {
             MEDIA_PICK_CODE -> if (resultCode == Activity.RESULT_OK) {
 
-                binding.overlay.clear()
-                binding.imageView.setImageBitmap(null)
-                binding.imageView.setImageDrawable(getDrawable(R.drawable.ic_launcher_foreground))
-                mViewModel.resetBlocks()
+                resetObservables()
 
                 // get loaded image data from mdia select intent
                 imageReturnedIntent?.data.let {
@@ -159,6 +159,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+//        addObservers()
+    }
+
+    fun resetObservables(){
+        binding.overlay.clear()
+        binding.imageView.setImageBitmap(null)
+        binding.imageView.setImageDrawable(getDrawable(R.drawable.ic_launcher_foreground))
+        mViewModel.resetBlocks()
+        mViewModel.clearUri()
+    }
+
+
+
+    private fun addObservers(){
+
         Log.e("outputstatus", "${mViewModel.getOutputStatus()}")
         // Show work status for the tagged work request, through livedata observer
         mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
@@ -168,6 +183,19 @@ class MainActivity : AppCompatActivity() {
 
         // Observer changes to the mtextCloud object
         mViewModel.mtextCloud.observe(this, traceDocumentTextInCloudHnalder())
+    }
+
+    private fun removeObservers(){
+
+        Log.e("outputstatus", "${mViewModel.getOutputStatus()}")
+        // Show work status for the tagged work request, through livedata observer
+        mViewModel.getOutputStatus()?.removeObserver(workStatusesObserver() )
+
+        //observe the changes to the state of the read text vision object
+        mViewModel.mtextBlocks.removeObserver(traceTwitterHandles())
+
+        // Observer changes to the mtextCloud object
+        mViewModel.mtextCloud.removeObserver(traceDocumentTextInCloudHnalder())
     }
 
     // on device ML text vision state observer

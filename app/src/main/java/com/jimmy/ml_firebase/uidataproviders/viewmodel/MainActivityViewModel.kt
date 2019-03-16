@@ -141,6 +141,10 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
         return mImageUri
     }
 
+    fun clearUri(){
+        mImageUri = null
+    }
+
     // helper method to check if the uri string is not empty, and parses it to return  uri.
     private fun uriOrNull(uriString: String): Uri? {
         return if (!TextUtils.isEmpty(uriString)) {
