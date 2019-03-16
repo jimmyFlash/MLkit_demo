@@ -8,6 +8,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import com.jimmy.ml_firebase.R
+import com.jimmy.ml_firebase.helpers.TiltListener
+import com.jimmy.ml_firebase.helpers.TiltRollSensor
 
 
 /**
@@ -20,7 +22,27 @@ import com.jimmy.ml_firebase.R
 
 class WavesView @JvmOverloads constructor(context: Context,
                  attrs: AttributeSet? = null,
-                 defStyleAttr: Int = R.attr.wavesViewStyle) : View(context, attrs, defStyleAttr) {
+                 defStyleAttr: Int = R.attr.wavesViewStyle) : View(context, attrs, defStyleAttr) , TiltListener{
+
+    // lazy initialization
+    val tiltSensor by lazy {
+        TiltRollSensor(context)
+    }
+
+    override fun onTilt(pitchRollRad: Pair<Double, Double>) {
+        val pitchRad = pitchRollRad.first
+        val rollRad = pitchRollRad.second
+
+        // Use half view height/width to calculate offset instead of full view/device measurement
+        val maxYOffset = center.y.toDouble()
+        val maxXOffset = center.x.toDouble()
+
+        val yOffset = (Math.sin(pitchRad) * maxYOffset)
+        val xOffset = (Math.sin(rollRad) * maxXOffset)
+
+        updateGradient(xOffset.toFloat() + center.x, yOffset.toFloat() + center.y)
+
+    }
 
 
     // color
@@ -40,6 +62,8 @@ class WavesView @JvmOverloads constructor(context: Context,
     //to draw the star shape
     private val wavePath = Path()
 
+    private val gradientMatrix = Matrix()
+
     private val gradientPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         // Highlight only the areas already touched on the canvas
         xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
@@ -48,10 +72,12 @@ class WavesView @JvmOverloads constructor(context: Context,
     // gradient colors
     private val green = Color.GREEN
     private val white = Color.WHITE
-    private val primaryDark = context.getColor(R.color.colorPrimary)
+    private val primaryColor = context.getColor(R.color.colorPrimary)
+    private val primaryDarkColor = context.getColor(R.color.colorPrimaryDark)
     // solid green in the center, transparent green at the edges
     private val gradientColors =
-        intArrayOf(primaryDark, modifyAlpha(white, 0.8f),  modifyAlpha(primaryDark, 0.0f))
+        intArrayOf(white, primaryColor,  primaryDarkColor)
+
     init {
         val attrs_ = context.obtainStyledAttributes(attrs, R.styleable.WavesView, defStyleAttr, 0)
 
@@ -87,23 +113,27 @@ class WavesView @JvmOverloads constructor(context: Context,
             addUpdateListener {
                 waveRadiusOffset = it.animatedValue as Float
             }
-            duration = 3000L
+            duration = 1500L
             repeatMode = ValueAnimator.RESTART
             repeatCount = ValueAnimator.INFINITE
             interpolator = LinearInterpolator()
             start()
         }
+
+        tiltSensor.addListener(this)
+        tiltSensor.register()
     }
 
     override fun onDetachedFromWindow() {
         waveAnimator?.cancel()// stop animation
+        tiltSensor.unregister()
         super.onDetachedFromWindow()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         //set the center of all circles to be center of the view
         center.set(w / 2f, h / 2f)
-        maxRadius = Math.hypot(center.y.toDouble()*1.5, center.y.toDouble()*1.5).toFloat()
+        maxRadius = Math.hypot(center.x.toDouble(), center.y.toDouble()).toFloat()
         initialRadius = w / waveGap
 
         //Create gradient after getting sizing information
@@ -180,5 +210,15 @@ class WavesView @JvmOverloads constructor(context: Context,
 
     private fun modifyAlpha(color: Int, alpha: Float): Int {
         return color and 0x00ffffff or ((alpha * 255).toInt() shl 24)
+    }
+
+
+    /**
+     * To move the gradient on the canvas, we’ll translate the gradient paint shader’s local matrix by a calculated amount.
+     */
+    private fun updateGradient(x: Float, y: Float) {
+        gradientMatrix.setTranslate(x - center.x, y - center.y)
+        gradientPaint.shader.setLocalMatrix(gradientMatrix)
+        postInvalidateOnAnimation()
     }
 }
