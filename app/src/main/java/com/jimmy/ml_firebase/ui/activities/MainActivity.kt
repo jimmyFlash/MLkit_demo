@@ -76,17 +76,9 @@ class MainActivity : AppCompatActivity() {
         if(mViewModel.getImageUri() != null){
             Log.e("configuration change", mViewModel.getImageUri().toString())
 
-            // clear overlay view, image view, stored blocks of text
-            resetObservables()
+            // todo find way to not have previous image data form work manager load at start up
+            mViewModel.resizeimageWork(binding.imageView)// resize the image using workmanager
 
-            Handler().postDelayed({
-//todo check if you need to remove this after moving observers to activity creation
-                mViewModel.resizeimageWork(binding.imageView)// resize the image using workmanager
-                mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )// observer image process
-                //observe the changes to the state of the read text vision object
-                mViewModel.mtextBlocks.observe(this,traceTwitterHandles())
-
-            }, 2000)
         }
 
 
@@ -113,10 +105,7 @@ class MainActivity : AppCompatActivity() {
         */
         binding.executePendingBindings()
 
-        resetObservables()
         addObservers()
-
-
     }
 
     /**
@@ -173,6 +162,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun addObservers(){
+
+        mViewModel.getWrkmanagerIns().pruneWork()
 
         Log.e("outputstatus", "${mViewModel.getOutputStatus()}")
         // Show work status for the tagged work request, through livedata observer

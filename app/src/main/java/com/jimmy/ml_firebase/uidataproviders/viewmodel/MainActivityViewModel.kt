@@ -141,6 +141,11 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
         return mImageUri
     }
 
+
+    fun getWrkmanagerIns(): WorkManager {
+        return mWorkManager
+    }
+
     fun clearUri(){
         mImageUri = null
     }
