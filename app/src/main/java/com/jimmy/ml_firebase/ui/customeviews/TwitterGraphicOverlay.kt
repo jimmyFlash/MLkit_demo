@@ -1,6 +1,6 @@
 
 
-package com.jimmy.ml_firebase.ui.customviews
+package com.jimmy.ml_firebase.ui.customeviews
 
 import android.content.Context
 import android.content.Intent

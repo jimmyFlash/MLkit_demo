@@ -4,7 +4,7 @@ package com.jimmy.ml_firebase.ui.graphics
 
 
 import android.graphics.*
-import com.jimmy.ml_firebase.ui.customviews.TwitterGraphicOverlay
+import com.jimmy.ml_firebase.ui.customeviews.TwitterGraphicOverlay
 
 /**
  * Graphic instance for rendering TextBlock position, size, and ID within an associated graphic

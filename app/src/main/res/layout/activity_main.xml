@@ -42,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.AppBarOverlay"
+                app:layout_constraintTop_toTopOf="parent"
    >
 
             <android.support.v7.widget.Toolbar
@@ -66,7 +67,7 @@
                 tools:background="#0000ff"/>
 
 
-        <com.jimmy.ml_firebase.ui.customviews.TwitterGraphicOverlay
+        <com.jimmy.ml_firebase.ui.customeviews.TwitterGraphicOverlay
                 android:id="@+id/overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
