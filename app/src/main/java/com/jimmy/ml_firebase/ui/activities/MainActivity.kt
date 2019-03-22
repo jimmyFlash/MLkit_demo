@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //todo fix hide twitter overlay custom view at beginning to display below image
         // initiate binding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -76,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         if(mViewModel.getImageUri() != null){
             Log.e("configuration change", mViewModel.getImageUri().toString())
 
-            // todo find way to not have previous image data form work manager load at start up
+
             mViewModel.resizeimageWork(binding.imageView)// resize the image using workmanager
 
         }

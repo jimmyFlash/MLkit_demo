@@ -18,7 +18,6 @@ class MLRoundedImagView (context: Context, attrs: AttributeSet) : ImageView(cont
     var rad:Int = 0
 
 
-    //todo scale bitmap if larger than the scale of the view
     init {
         attrs.let {
             val typedArray = context.obtainStyledAttributes(it, com.jimmy.ml_firebase.R.styleable.MLRoundedImagView,
