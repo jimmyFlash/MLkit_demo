@@ -59,7 +59,7 @@
 
 
             <KeyAttribute
-                    motion:target="@id/fab"
+                    motion:motionTarget="@id/fab"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
                     motion:framePosition="30" />

@@ -43,8 +43,8 @@
 
         <com.jimmy.ml_firebase.ui.customeviews.MLRoundedImagView
                 android:id="@+id/twitterSnap"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/twitterhandle"
                 app:layout_constraintTop_toTopOf="parent"
@@ -53,28 +53,44 @@
                 app:layout_constraintEnd_toEndOf="@id/g1"
                 app:circle_radius="0"
                 tools:background="@color/colorPrimary"
+                app:layout_constraintVertical_bias="0.2"
         />
 
 
         <com.jimmy.ml_firebase.ui.customeviews.MLRoundedImagView
                 android:id="@+id/deliciousFood"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:contentDescription="@string/delicious_food"
                 android:src="@drawable/food"
                 app:layout_constraintEnd_toEndOf="@id/g2"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/twitterSnap"
                 app:layout_constraintStart_toStartOf="@id/g2"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:circle_radius="0"
                 tools:background="@color/colorPrimary"
+        />
+
+        <com.jimmy.ml_firebase.ui.customeviews.MLRoundedImagView
+                android:id="@+id/googleLensClone"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="@string/google_lens_clone"
+                android:src="@drawable/dims"
+                app:layout_constraintEnd_toEndOf="@id/g1"
+                app:layout_constraintStart_toStartOf="@id/g1"
+                app:layout_constraintTop_toBottomOf="@id/twitterSnap"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="20dp"
+                app:circle_radius="0"
+                tools:background="@color/colorPrimary"
+                app:layout_constraintVertical_bias="0.3"
         />
 
         <android.support.constraint.Group
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imgGroup"
-                app:constraint_referenced_ids="twitterSnap,deliciousFood"
+                app:constraint_referenced_ids="twitterSnap,deliciousFood,googleLensClone"
         />
 
 
@@ -110,6 +126,18 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         />
 
+        <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/google_lens_clone"
+                app:layout_constraintTop_toBottomOf="@+id/googleLensClone"
+                app:layout_constraintStart_toStartOf="@id/g1"
+                app:layout_constraintEnd_toEndOf="@id/g1"
+                android:textColor="@android:color/white"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        />
 
 
     </android.support.constraint.ConstraintLayout>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MLKit</string>
+    <string name="title_activity_google_lens">GoogleLens</string>
+</resources>

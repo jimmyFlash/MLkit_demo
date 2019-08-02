@@ -11,5 +11,6 @@
     <string name="permission_message">I need permission to take pictures :(</string>
     <string name="OK">OK</string>
     <string name="error">Error</string>
+    <string name="google_lens_clone">Google lens clone</string>
 
 </resources>

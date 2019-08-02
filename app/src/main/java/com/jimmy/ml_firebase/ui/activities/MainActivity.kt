@@ -85,6 +85,14 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.motionLayout.setTransitionListener(object: MotionLayout.TransitionListener{
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
+              //
+            }
+
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+               //
+            }
+
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
                 //Print each floating-point number to Logcat//
                 Log.d("TAG", "Progress:$progress")
