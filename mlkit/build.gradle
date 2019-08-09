@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -21,6 +22,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 
 }
@@ -47,6 +56,10 @@ dependencies {
     implementation 'com.mindorks:paracamera:0.2.2'
     implementation "com.android.support:recyclerview-v7:$supportAppCompat"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // life cycle aware components lib
+    implementation 'android.arch.lifecycle:extensions:' + rootProject.archLifecycleVersion
+    kapt "android.arch.lifecycle:common-java8:1.1.1"
 
 
 }

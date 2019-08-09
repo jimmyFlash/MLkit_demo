@@ -2,12 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.jimmy.mlkit">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application>
         <activity
                 android:name=".ui.views.googleLensClone.GoogleLens"
                 android:label="@string/title_activity_google_lens"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
     </application>
 
 </manifest>
