@@ -61,5 +61,8 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:' + rootProject.archLifecycleVersion
     kapt "android.arch.lifecycle:common-java8:1.1.1"
 
+    // add the actions module library to the project
+    implementation project(":actions")
+
 
 }

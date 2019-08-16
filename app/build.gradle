@@ -82,8 +82,11 @@ dependencies {
 
     implementation 'com.mindorks:paracamera:0.2.2'
 
-    // add the testmodule library to the project
+    // add the mlkit module library to the project
     implementation project(":mlkit")
+
+    // add the actions module library to the project
+    implementation project(":actions")
 }
 
 apply plugin: 'com.google.gms.google-services'

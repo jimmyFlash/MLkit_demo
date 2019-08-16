@@ -31,7 +31,7 @@ abstract class BaseCameraActivity : AppCompatActivity(), View.OnClickListener {
         lparam.behavior = BottomSheetBehavior<View>()
         inflatedView.layoutParams = lparam
         sheetBehavior = BottomSheetBehavior.from(inflatedView)
-        sheetBehavior.peekHeight = 224
+        sheetBehavior.peekHeight = 180
 
         //Hide the fab as bottomSheet is expanded
         sheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {

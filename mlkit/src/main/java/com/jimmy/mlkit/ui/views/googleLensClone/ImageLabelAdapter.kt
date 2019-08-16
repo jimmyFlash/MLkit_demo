@@ -2,6 +2,7 @@ package com.jimmy.mlkit.ui.views.googleLensClone
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -58,6 +59,19 @@ class ImageLabelAdapter (private val firebaseVisionList: List<Any>, private val 
         }
 
     }
+
+    /**
+     * diffUtils implementation for comparator
+     */
+   /* companion object {
+        private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<Any>() {
+            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean =
+                oldItem.fullName == newItem.fullName
+
+            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean =
+                oldItem == newItem
+        }
+    }*/
 
 
 }

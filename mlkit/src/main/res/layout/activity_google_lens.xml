@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -13,9 +16,7 @@
     </data>
 
     <android.support.design.widget.CoordinatorLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".ui.views.googleLensClone.GoogleLens">
@@ -46,7 +47,7 @@
 
             <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:adjustViewBounds="true"
                     android:cropToPadding="false"
@@ -58,30 +59,18 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     tools:background="#ff0000"/>
 
-           <!-- <ImageButton
-                    android:id="@+id/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/holo_orange_dark"
-                    android:onClick="takePicture"
-                    android:src="@android:drawable/ic_menu_camera"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:padding="20dp"/>-->
-
-
             <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_take_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="60dp"
                     android:onClick="takePicture"
                     android:src="@android:drawable/ic_menu_camera"
                     app:backgroundTint="@color/colorPrimary"
                     app:fabSize="normal"
                     app:rippleColor="@color/colorAccent"
-                    android:padding="20dp"
+                    android:padding="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
             />
@@ -93,9 +82,9 @@
         <ViewStub
                 android:id="@+id/stubView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="500dp"
                 android:inflatedId="@+id/bottomLayout"
-                android:visibility="visible" />
+        />
 
 
     </android.support.design.widget.CoordinatorLayout>

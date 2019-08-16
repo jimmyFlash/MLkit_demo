@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.image_label_layout.*
 
 class GoogleLens : BaseCameraActivity() {
 
-
+//todo create custom intents to bind the module activity to main project
     private lateinit var itemAdapter: ImageLabelAdapter
     private lateinit var camera: Camera
 
@@ -34,6 +34,7 @@ class GoogleLens : BaseCameraActivity() {
 
     lateinit var binding : ActivityGoogleLensBinding
     lateinit var mViewModel : GoogleLensViewModel
+    var itemsList = mutableListOf<Any>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
