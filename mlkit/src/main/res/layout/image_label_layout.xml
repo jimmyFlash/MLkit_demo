@@ -15,13 +15,16 @@
             android:id="@+id/lbl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:padding="4dp"
             android:text="@string/detected_items"
             android:textSize="24sp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:fontFamily="@font/roboto_medium"/>
+            android:fontFamily="@font/roboto_medium"
+            android:background="@color/colorPrimary"/>
 
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvLabel"

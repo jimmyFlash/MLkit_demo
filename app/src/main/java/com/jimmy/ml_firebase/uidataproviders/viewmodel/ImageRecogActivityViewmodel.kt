@@ -13,8 +13,7 @@ import com.jimmy.ml_firebase.logicrepository.RepositoryManager
 import com.mindorks.paracamera.Camera
 
 class ImageRecogActivityViewmodel(application : Application) : AndroidViewModel(application), RepositoryManager.StatusCallBack {
-
-    //todo implement dagger for repository instance / rxJava
+    
 
     val  TAG:String? = ImageRecogActivityViewmodel::class.java.simpleName
 
