@@ -4,15 +4,18 @@ import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel
 import com.google.firebase.ml.vision.label.FirebaseVisionLabel
 import com.jimmy.mlkit.R
 import kotlinx.android.synthetic.main.item_row.view.*
+import java.util.*
 
-class ImageLabelAdapter (private val firebaseVisionList: List<Any>, private val isCloud: Boolean) :
+class ImageLabelAdapter (private var firebaseVisionList: MutableList<Any>, private val isCloud: Boolean) :
     RecyclerView.Adapter<ImageLabelAdapter.ItemHolder>() {
 
     lateinit var context: Context
@@ -35,6 +38,8 @@ class ImageLabelAdapter (private val firebaseVisionList: List<Any>, private val 
 
     inner class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindCloud(currentItem: FirebaseVisionCloudLabel) {
+
+            Log.e("bindCloud".toUpperCase(Locale.getDefault()), "${currentItem.confidence} ${currentItem.label}  ")
             when {
                 currentItem.confidence > .70 -> itemView.itemAccuracy.setTextColor(
                     ContextCompat.getColor(context, R.color.green))
@@ -47,6 +52,9 @@ class ImageLabelAdapter (private val firebaseVisionList: List<Any>, private val 
         }
 
         fun bindDevice(currentItem: FirebaseVisionLabel) {
+
+            Log.e("bindDevice".toUpperCase(Locale.getDefault()), "${currentItem.confidence} ${currentItem.label}  ")
+            //Toast.makeText(context, "${currentItem.confidence} ${currentItem.label}" , Toast.LENGTH_SHORT).show()
             when {
                 currentItem.confidence > .70 -> itemView.itemAccuracy.setTextColor(
                     ContextCompat.getColor(context, R.color.green))
@@ -58,6 +66,12 @@ class ImageLabelAdapter (private val firebaseVisionList: List<Any>, private val 
             itemView.itemAccuracy.text = "Probability : ${(currentItem.confidence * 100).toInt()}%"
         }
 
+    }
+
+    fun updateAdapter(newItems : List<Any>){
+        firebaseVisionList.clear()
+        firebaseVisionList.addAll(newItems)
+        notifyDataSetChanged()
     }
 
     /**

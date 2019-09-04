@@ -72,11 +72,12 @@ class WavesView @JvmOverloads constructor(context: Context,
     // gradient colors
     private val green = Color.GREEN
     private val white = Color.WHITE
+    private val grey = Color.GRAY
     private val primaryColor = context.getColor(R.color.colorPrimary)
     private val primaryDarkColor = context.getColor(R.color.colorPrimaryDark)
     // solid green in the center, transparent green at the edges
     private val gradientColors =
-        intArrayOf(white, primaryColor,  primaryDarkColor)
+        intArrayOf(white, grey,  primaryDarkColor)
 
     init {
         val attrs_ = context.obtainStyledAttributes(attrs, R.styleable.WavesView, defStyleAttr, 0)
@@ -104,7 +105,7 @@ class WavesView @JvmOverloads constructor(context: Context,
         super.onAttachedToWindow()
 
         /*
-        creating a value animator that runs for 1.5 seconds, repeating in an endless loop.
+        creating a value animator that runs for 4 seconds, repeating in an endless loop.
         On every animation frame, the waveRadiusOffset will be updated — waveRadiusOffset is the value that tracks the
         circle expansion from its original position
          */
@@ -113,7 +114,7 @@ class WavesView @JvmOverloads constructor(context: Context,
             addUpdateListener {
                 waveRadiusOffset = it.animatedValue as Float
             }
-            duration = 1500L
+            duration = 4000L
             repeatMode = ValueAnimator.RESTART
             repeatCount = ValueAnimator.INFINITE
             interpolator = LinearInterpolator()

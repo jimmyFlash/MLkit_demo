@@ -1,14 +1,11 @@
 package com.jimmy.mlkit.ui.views.googleLensClone
 
 
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import com.jimmy.mlkit.R
-import com.jimmy.mlkit.ui.utils.ExitWithAnimation
-import com.jimmy.mlkit.ui.utils.exitCircularReveal
 import com.jimmy.mlkit.ui.utils.findLocationOfCenterOnTheScreen
 import com.jimmy.mlkit.ui.utils.open
 import com.jimmy.mlkit.ui.views.BaseCameraActivity

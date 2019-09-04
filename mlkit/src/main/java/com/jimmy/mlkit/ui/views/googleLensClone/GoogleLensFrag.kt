@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,7 @@ class GoogleLensFrag : BaseFragment(), ExitWithAnimation {
 
     private lateinit var itemAdapter: ImageLabelAdapter
     private lateinit var camera: Camera
+    private val dummyList = mutableListOf<Any>()
 
     companion object {
         fun newInstance(exit: IntArray? = null) = GoogleLensFrag().apply {
@@ -74,17 +76,24 @@ class GoogleLensFrag : BaseFragment(), ExitWithAnimation {
 
         setupBottomSheet(R.layout.image_label_layout)
         rvLabel.layoutManager = LinearLayoutManager(activity)
+        itemAdapter = ImageLabelAdapter(dummyList, false)
+        rvLabel.adapter = itemAdapter
         viewModel.itemsFail.observe(this, Observer {
 
             Toast.makeText(activity,"Sorry, something went wrong!", Toast.LENGTH_SHORT).show()
-
         })
 
         viewModel.itemsSucces.observe(this, Observer {
 
-            itemAdapter = ImageLabelAdapter(it!!, false)
-            rvLabel.adapter = itemAdapter
-            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+            Log.e("FB-device", "items detected ${it?.size}")
+            Toast.makeText(activity,"Items detected ${it?.size}", Toast.LENGTH_SHORT).show()
+            if(sheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED){
+                sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+
+            itemAdapter.updateAdapter(it!!)
+            rvLabel.smoothScrollToPosition(0)
+
         })
     }
 
