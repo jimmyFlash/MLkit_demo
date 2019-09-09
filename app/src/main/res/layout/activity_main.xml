@@ -32,11 +32,12 @@
 
     -->
 
+
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
-
+<!--
         <android.support.design.widget.AppBarLayout
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
@@ -53,6 +54,7 @@
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.AppBarLayout>
+-->
 
 
 
@@ -63,7 +65,7 @@
                 android:contentDescription="@string/select_image_for_text_recognition"
                 android:scaleType="fitStart"
                 tools:src="@mipmap/ic_launcher"
-                android:layout_marginTop="?attr/actionBarSize"
+
                 tools:background="#0000ff"/>
 
 
@@ -72,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:background="#ff0000"
-                android:layout_marginTop="?attr/actionBarSize"
+
         />
 
 

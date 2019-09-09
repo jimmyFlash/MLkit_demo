@@ -8,6 +8,7 @@ import android.databinding.ObservableField
 import android.graphics.Bitmap
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import android.widget.ImageView
 import androidx.work.*
 import com.google.firebase.ml.vision.FirebaseVision
@@ -16,6 +17,7 @@ import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecogni
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.text.FirebaseVisionText
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer
+import com.jimmy.actions.uiutils.DeviceDimensionsHelper
 import com.jimmy.ml_firebase.Constants.IMAGE_MANIPULATION_WORK_NAME
 import com.jimmy.ml_firebase.Constants.KEY_IMAGE_URI
 import com.jimmy.ml_firebase.Constants.KEY_IMAGE_VIEW_H
@@ -169,9 +171,11 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
     private fun createInputDataForUri(imageView : ImageView): Data {
         val builder = Data.Builder()
         if (mImageUri != null) {
+            Log.e("createInputDataForUri".toUpperCase(), "device dimensions w/h" +
+                    "  ${DeviceDimensionsHelper.getDisplayWidth(getApplication())} , ${DeviceDimensionsHelper.getDisplayHeight(getApplication())}")
             builder.putString(KEY_IMAGE_URI, mImageUri.toString())
-            builder.putInt(KEY_IMAGE_VIEW_W, imageView.width)
-            builder.putInt(KEY_IMAGE_VIEW_H, imageView.height)
+            builder.putInt(KEY_IMAGE_VIEW_W, DeviceDimensionsHelper.getDisplayWidth(getApplication()))
+            builder.putInt(KEY_IMAGE_VIEW_H, DeviceDimensionsHelper.getDisplayHeight(getApplication()))
         }
         return builder.build()
     }

@@ -22,6 +22,8 @@ import android.widget.Toast
 import androidx.work.WorkStatus
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.google.firebase.ml.vision.text.FirebaseVisionText
+import com.jimmy.actions.uiutils.hidesupportActionBar
+import com.jimmy.actions.uiutils.makeFullScreen
 import com.jimmy.ml_firebase.Constants
 import com.jimmy.ml_firebase.permissions.PermissionManager
 import com.jimmy.ml_firebase.R
@@ -53,14 +55,19 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
+        makeFullScreen()
 
         //todo fix hide twitter overlay custom view at beginning to display below image
         // initiate binding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
+/*
         setSupportActionBar(binding.toolbar)
         binding.toolbar.title = getString(R.string.app_name)
+
+        hidesupportActionBar()*/
 
         // Get the ViewModel
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
@@ -109,6 +116,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+
         /*
             Evaluates the pending bindings, updating any Views that have expressions bound to modified
             variables. This must be run on the UI thread.
@@ -148,9 +157,9 @@ class MainActivity : AppCompatActivity() {
 
                     mViewModel.setImageUri(it.toString())// call setter method in VM to set image Uri
                     if (mViewModel.getImageUri() != null) {// validate the Uri
-                        Log.e("CAM image uri", mViewModel.getImageUri().toString()  +
-                                "," + binding.imageView.width +
-                                "," + binding.imageView.height + "extra")
+                        Log.e("image uri", mViewModel.getImageUri().toString()  +
+                                ", width: " + binding.imageView.width +
+                                ", height: " + binding.imageView.height )
                         // resize image bitmap using VM method that calls for worker
                         mViewModel.resizeimageWork(binding.imageView)
                     }
@@ -362,21 +371,21 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         binding.imageView.invalidate()
-        Log.e("onStart", "image dimentions ${binding.imageView.width} , ${binding.imageView.height}")
 
-        //Animate to the end ConstraintSet//
-        binding.motionLayout.transitionToEnd()
+
     }
 
     override fun onResume() {
         super.onResume()
-        Log.e("onStart", "image dimentions ${binding.imageView.width} , ${binding.imageView.height}")
+
+        //Animate to the end ConstraintSet//
+        binding.motionLayout.transitionToEnd()
+
     }
 
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        Log.e("onWindowFocusChanged", "image dimentions ${binding.imageView.width} , ${binding.imageView.height}")
     }
 
 
