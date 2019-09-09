@@ -77,7 +77,7 @@ class WavesView @JvmOverloads constructor(context: Context,
     private val primaryDarkColor = context.getColor(R.color.colorPrimaryDark)
     // solid green in the center, transparent green at the edges
     private val gradientColors =
-        intArrayOf(white, grey,  primaryDarkColor)
+        intArrayOf(white, grey,  primaryColor)
 
     init {
         val attrs_ = context.obtainStyledAttributes(attrs, R.styleable.WavesView, defStyleAttr, 0)
