@@ -37,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
-<!--
         <android.support.design.widget.AppBarLayout
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
@@ -54,7 +53,6 @@
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.AppBarLayout>
--->
 
 
 

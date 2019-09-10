@@ -174,8 +174,12 @@ class MainActivityViewModel(application : Application) : AndroidViewModel(applic
             Log.e("createInputDataForUri".toUpperCase(), "device dimensions w/h" +
                     "  ${DeviceDimensionsHelper.getDisplayWidth(getApplication())} , ${DeviceDimensionsHelper.getDisplayHeight(getApplication())}")
             builder.putString(KEY_IMAGE_URI, mImageUri.toString())
-            builder.putInt(KEY_IMAGE_VIEW_W, DeviceDimensionsHelper.getDisplayWidth(getApplication()))
-            builder.putInt(KEY_IMAGE_VIEW_H, DeviceDimensionsHelper.getDisplayHeight(getApplication()))
+//            builder.putInt(KEY_IMAGE_VIEW_W, DeviceDimensionsHelper.getDisplayWidth(getApplication()))
+//            builder.putInt(KEY_IMAGE_VIEW_H, DeviceDimensionsHelper.getDisplayHeight(getApplication()))
+
+            builder.putInt(KEY_IMAGE_VIEW_W, imageView.width)
+            builder.putInt(KEY_IMAGE_VIEW_H, imageView.height)
+
         }
         return builder.build()
     }

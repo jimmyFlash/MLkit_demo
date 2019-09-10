@@ -1,15 +1,18 @@
 package com.jimmy.ml_firebase.ui.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.provider.MediaStore
 import android.support.constraint.motion.MotionLayout
@@ -18,6 +21,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.work.WorkStatus
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
@@ -47,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var mViewModel : MainActivityViewModel
 
     private val MEDIA_PICK_CODE :Int = 1
+    private val  recalTimeout : Long = 500
 
     private val REQUEST_MULTI_PERMISSION = 10// permission for external storage
     private var  pm: PermissionManager? = null// permission manager ref.
@@ -58,16 +63,11 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        makeFullScreen()
-
-        //todo fix hide twitter overlay custom view at beginning to display below image
-        // initiate binding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-/*
+
         setSupportActionBar(binding.toolbar)
         binding.toolbar.title = getString(R.string.app_name)
 
-        hidesupportActionBar()*/
 
         // Get the ViewModel
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         // introduce  viewmodel instance to binding variable (viewmodel)
         binding.viewmodel = mViewModel
 
+        binding.imageView.setImageDrawable(getDrawable(R.drawable.ic_launcher_foreground))
         // set up click listener for the FAB button
         setUpNewImageListener()
 
@@ -86,7 +87,22 @@ class MainActivity : AppCompatActivity() {
             Log.e("configuration change", mViewModel.getImageUri().toString())
 
 
-            mViewModel.resizeimageWork(binding.imageView)// resize the image using workmanager
+            val countDownTimer = object : CountDownTimer(recalTimeout, 100){
+                override fun onFinish() {
+                    Log.e("image view dimensions",
+                            ", width: " + binding.imageView.width +
+                            ", height: " + binding.imageView.height )
+
+                    mViewModel.resizeimageWork(binding.imageView)// resize the image using workmanager
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+                 //
+                }
+
+            }
+
+            countDownTimer.start()
 
         }
 
@@ -96,8 +112,11 @@ class MainActivity : AppCompatActivity() {
               //
             }
 
+            @SuppressLint("RestrictedApi")
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-               //
+                if(mViewModel.getImageUri() != null){
+                    binding.fab.visibility = View.INVISIBLE
+                }
             }
 
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, progress: Float) {
@@ -105,10 +124,15 @@ class MainActivity : AppCompatActivity() {
                 Log.d("TAG", "Progress:$progress")
             }
 
+            @SuppressLint("RestrictedApi")
             override fun onTransitionCompleted(p0: MotionLayout?, currentId: Int) {
                 //If our button is in the ending_set position...//
 
                 if(currentId == R.id.end) {
+
+                    if(mViewModel.getImageUri() != null){
+                        binding.fab.visibility = View.VISIBLE
+                    }
 
                     //...then move it back to the starting position//
 //                    binding.motionLayout.transitionToStart()
@@ -124,6 +148,7 @@ class MainActivity : AppCompatActivity() {
         */
         binding.executePendingBindings()
 
+        // register observers everytime activity is created/recreated
         addObservers()
     }
 
@@ -170,6 +195,12 @@ class MainActivity : AppCompatActivity() {
 //        addObservers()
     }
 
+    /**
+     * helper method
+     * clear all observables
+     * clear/ reset image view to default image
+     * reset viewmodel data
+     */
     fun resetObservables(){
         binding.overlay.clear()
         binding.imageView.setImageBitmap(null)
@@ -182,6 +213,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun addObservers(){
 
+
+        /*
+            Prunes all eligible finished work from the internal database. Eligible work must be finished
+            (State.SUCCEEDED, State.FAILED, or State.CANCELLED), with zero unfinished dependents.
+            Use this method with caution; by invoking it, you
+            (and any modules and libraries in your codebase) will no longer be able to observe
+            the WorkStatus of the pruned work
+         */
         mViewModel.getWrkmanagerIns().pruneWork()
 
         Log.e("outputstatus", "${mViewModel.getOutputStatus()}")
@@ -367,20 +406,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        binding.imageView.invalidate()
-
-
-    }
 
     override fun onResume() {
         super.onResume()
+        binding.overlay.clear()
+        binding.imageView.setImageBitmap(null)
+        binding.imageView.setImageDrawable(getDrawable(R.drawable.ic_launcher_foreground))
+        object : CountDownTimer(recalTimeout, 100) {
+            override fun onTick(millisUntilFinished: Long) {
 
-        //Animate to the end ConstraintSet//
-        binding.motionLayout.transitionToEnd()
-
+            }
+            override fun onFinish() {
+                //Animate to the end ConstraintSet//
+                 binding.motionLayout.transitionToEnd()
+            }
+        }.start()
     }
 
 
