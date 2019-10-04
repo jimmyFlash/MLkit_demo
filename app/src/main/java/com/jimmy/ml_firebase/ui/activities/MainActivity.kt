@@ -47,6 +47,10 @@ class MainActivity : AppCompatActivity() {
         binding.overlay.addBox(boundingBox)
     }
 
+    fun clearBoxes(){
+        binding.overlay.clear()
+    }
+
     lateinit var binding : ActivityMainBinding
     lateinit var mViewModel : MainActivityViewModel
 
@@ -57,6 +61,8 @@ class MainActivity : AppCompatActivity() {
     private var  pm: PermissionManager? = null// permission manager ref.
 
     private var fVT : FirebaseVisionText? = null
+
+    private var resetBoxes =  false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -152,6 +158,11 @@ class MainActivity : AppCompatActivity() {
         addObservers()
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        resetBoxes = true
+    }
+
     /**
      * click handler for the FAB
      */
@@ -192,7 +203,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        addObservers()
     }
 
     /**
@@ -223,12 +233,13 @@ class MainActivity : AppCompatActivity() {
          */
         mViewModel.getWrkmanagerIns().pruneWork()
 
-        Log.e("outputstatus", "${mViewModel.getOutputStatus()}")
+        Log.e("outputstatus", "${mViewModel.getOutputStatus()?.value?.size}")
+        val workMngrStatus = mViewModel.getOutputStatus()
         // Show work status for the tagged work request, through livedata observer
-        mViewModel.getOutputStatus()?.observe(this, workStatusesObserver() )
+        workMngrStatus?.observe(this, workStatusesObserver() )
 
         //observe the changes to the state of the read text vision object
-        mViewModel.mtextBlocks.observe(this,traceTwitterHandles())
+        mViewModel.mtextBlocks.observe(this,traceTwitterHandles(resetBoxes))
 
         // Observer changes to the mtextCloud object
         mViewModel.mtextCloud.observe(this, traceDocumentTextInCloudHnalder())
@@ -241,16 +252,20 @@ class MainActivity : AppCompatActivity() {
         mViewModel.getOutputStatus()?.removeObserver(workStatusesObserver() )
 
         //observe the changes to the state of the read text vision object
-        mViewModel.mtextBlocks.removeObserver(traceTwitterHandles())
+        mViewModel.mtextBlocks.removeObserver(traceTwitterHandles(false))
 
         // Observer changes to the mtextCloud object
         mViewModel.mtextCloud.removeObserver(traceDocumentTextInCloudHnalder())
     }
 
     // on device ML text vision state observer
-    private fun traceTwitterHandles(): Observer<FirebaseVisionText>{
+    private fun traceTwitterHandles(reset : Boolean): Observer<FirebaseVisionText>{
         return Observer{texts ->
 
+            if(reset){
+                clearBoxes()
+                return@Observer
+            }
             Log.e("-----------", "${texts?.textBlocks?.size}  &  ${fVT == texts}")
 
             fVT = texts
@@ -311,7 +326,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * observer handler for workmanager status of image resizing process
      */
-    fun workStatusesObserver(): Observer<List<WorkStatus>> {
+    private fun workStatusesObserver(): Observer<List<WorkStatus>> {
         return Observer { listOfWorkStatuses ->
 
             // Note that these next few lines grab a single WorkStatus if it exists
@@ -338,6 +353,7 @@ class MainActivity : AppCompatActivity() {
                 // If there is an output file show "See File" button
                 if (!TextUtils.isEmpty(outputImageUri)) {
 
+                    if(resetBoxes) resetBoxes = false
                     val bitmapResized = MediaStore.Images.Media.getBitmap(this.contentResolver, Uri.parse(outputImageUri))
                     binding.imageView.setImageBitmap(bitmapResized)
                     // set up firebase cloud ML listener
