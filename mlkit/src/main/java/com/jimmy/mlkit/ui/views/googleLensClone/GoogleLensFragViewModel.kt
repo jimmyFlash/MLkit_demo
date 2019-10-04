@@ -14,6 +14,11 @@ class GoogleLensFragViewModel (application : Application) : AndroidViewModel(app
     var itemsSucces = MutableLiveData< List<Any> >()
     var itemsFail = MutableLiveData< Boolean >()
 
+    val bitmapImg: MutableLiveData<Bitmap> by lazy {
+        MutableLiveData<Bitmap>()
+    }
+
+
     fun getLabelsFromDevice(bitmap: Bitmap) {
 
         val image = FirebaseVisionImage.fromBitmap(bitmap)

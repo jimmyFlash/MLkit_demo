@@ -5,10 +5,10 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -57,7 +57,7 @@ class GoogleLensFrag : BaseFragment(), ExitWithAnimation {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.startCircularReveal(false)
+        if(savedInstanceState == null)view.startCircularReveal(false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -95,6 +95,17 @@ class GoogleLensFrag : BaseFragment(), ExitWithAnimation {
             rvLabel.smoothScrollToPosition(0)
 
         })
+
+        // Create the observer which updates the UI.
+        val bmpObserver = Observer<Bitmap> { bmp ->
+            // Update the UI
+            imageView.setImageBitmap(bmp)
+            viewModel.getLabelsFromDevice(bmp!!)
+        }
+
+        //todo check if this will preserve the image / and data after orientation
+        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
+        viewModel.bitmapImg.observe(this, bmpObserver)
     }
 
     private fun takePicture(view: View) {
@@ -128,8 +139,8 @@ class GoogleLensFrag : BaseFragment(), ExitWithAnimation {
             if (requestCode == Camera.REQUEST_TAKE_PHOTO) {
                 val bitmap = camera.cameraBitmap
                 if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap)
-                    viewModel.getLabelsFromDevice(bitmap)
+                    viewModel.bitmapImg.value = bitmap
+
                 } else {
                     Toast.makeText(activity, "Sorry, something went wrong!", Toast.LENGTH_SHORT)
                         .show()

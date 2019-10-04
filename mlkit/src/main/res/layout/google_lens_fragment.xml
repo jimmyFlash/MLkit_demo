@@ -30,7 +30,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    tools:background="#ff0000"/>
+                    tools:background="#ff0000"
+                    tools:ignore="ContentDescription" />
 
             <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_take_photo"

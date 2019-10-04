@@ -24,19 +24,21 @@ class GoogleLens : BaseCameraActivity() {
         val positions = container.findLocationOfCenterOnTheScreen()
 
 
-        val myCounter = object : CountDownTimer( 1500, 1000){
-            override fun onFinish() {
+        if(savedInstanceState == null) {
+            object : CountDownTimer(1500, 1000) {
+                override fun onFinish() {
 
-                supportFragmentManager.open {
-                    replace(R.id.container, GoogleLensFrag.newInstance(positions))
+                    supportFragmentManager.open {
+                        replace(R.id.container, GoogleLensFrag.newInstance(positions))
+                    }
                 }
-            }
 
-            override fun onTick(millisUntilFinished: Long) {
-                // do nothing here.
+                override fun onTick(millisUntilFinished: Long) {
+                    // do nothing here.
+                }
+            }.apply {
+                start()
             }
-        }.apply {
-            start()
         }
 
     }
