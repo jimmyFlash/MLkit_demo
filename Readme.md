@@ -2,10 +2,10 @@ Firebase ML-kit application
 - built with kotlin
 - MVVM pattern
 - LiveData arch components
-- Workmanager  
+- Workmanager
+- MotionLayout implementation
 
 
-** demo highlighting text blocks matching twitter handels in and image and click listener to process click 
-top open profile in web browser or in twitter app if present on phone
-
-** other features to be added for QR and face detection 
+** demo highlighting text blocks matching twitter handels in and image, enables visiting twitter profile in browser
+** simple image recognition of edible or non edible object images
+** module for detecting items in a single image with color coded levels to display certainty
