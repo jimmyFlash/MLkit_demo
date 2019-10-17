@@ -12,5 +12,6 @@
     <string name="OK">OK</string>
     <string name="error">Error</string>
     <string name="google_lens_clone">Google lens clone</string>
+    <string name="qr_reader">QR reader</string>
 
 </resources>

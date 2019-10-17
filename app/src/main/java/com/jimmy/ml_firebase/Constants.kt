@@ -21,6 +21,7 @@ object Constants {
     val OUTPUT_PATH = "blur_filter_outputs"
 
     val PERMISSION_REQUEST_CODE = 1
+    val FRGAMENT_TYPE = "fragmentType"
 
 
 }// Ensures this class is never instantiated

@@ -6,9 +6,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import com.jimmy.mlkit.R
+import com.jimmy.mlkit.ui.utils.ExitWithAnimation
+import com.jimmy.mlkit.ui.utils.exitCircularReveal
 import com.jimmy.mlkit.ui.utils.findLocationOfCenterOnTheScreen
 import com.jimmy.mlkit.ui.utils.open
 import com.jimmy.mlkit.ui.views.BaseCameraActivity
+import com.jimmy.mlkit.ui.views.qrCodeReader.QrReaderFrag
 import kotlinx.android.synthetic.main.activity_google_lens.*
 
 class GoogleLens : BaseCameraActivity() {
@@ -23,14 +26,22 @@ class GoogleLens : BaseCameraActivity() {
 
         val positions = container.findLocationOfCenterOnTheScreen()
 
-
         if(savedInstanceState == null) {
             object : CountDownTimer(1500, 1000) {
                 override fun onFinish() {
 
-                    supportFragmentManager.open {
-                        replace(R.id.container, GoogleLensFrag.newInstance(positions))
+                    when(intent.getIntExtra("fragmentType", 1)){
+                         1 ->  supportFragmentManager.open {
+                             replace(R.id.container, GoogleLensFrag.newInstance(positions))
+                         }
+
+
+                        2 -> supportFragmentManager.open {
+                            replace(R.id.container, QrReaderFrag.newInstance(positions))
+
+                         }
                     }
+
                 }
 
                 override fun onTick(millisUntilFinished: Long) {
@@ -67,7 +78,7 @@ class GoogleLens : BaseCameraActivity() {
     }
 
     override fun onBackPressed() {
-        /*with(supportFragmentManager.findFragmentById(R.id.container)) {
+        with(supportFragmentManager.findFragmentById(R.id.container)) {
             // Check if the current fragment implements the [ExitWithAnimation] interface or not
             // Also check if the [ExitWithAnimation.isToBeExitedWithAnimation] is `true` or not
             if ((this as? ExitWithAnimation)?.isToBeExitedWithAnimation() == true) {
@@ -81,7 +92,7 @@ class GoogleLens : BaseCameraActivity() {
             } else {
                 super.onBackPressed()
             }
-        }*/
-        super.onBackPressed()
+        }
+
     }
 }

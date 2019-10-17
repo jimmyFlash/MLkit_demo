@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.jimmy.actions.Actions
+import com.jimmy.ml_firebase.Constants
 import com.jimmy.ml_firebase.R
 import com.jimmy.ml_firebase.databinding.ActivitySplashBinding
 import com.jimmy.ml_firebase.ui.start
@@ -35,7 +36,13 @@ class SplashActivity : AppCompatActivity() {
         }
 
         googleLensClone.setOnClickListener {
-            startActivity(Intent(Actions.openGoogleLens(this@SplashActivity)))
+            startActivity(Intent(Actions.openGoogleLens(this@SplashActivity,
+                mapOf<String, Any>(Constants.FRGAMENT_TYPE to 1))))
+        }
+
+        qrCodeReader.setOnClickListener {
+            startActivity(Intent(Actions.openGoogleLens(this@SplashActivity,
+                mapOf<String, Any>(Constants.FRGAMENT_TYPE to 2))))
         }
 
     }

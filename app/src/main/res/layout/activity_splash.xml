@@ -86,11 +86,24 @@
                 app:layout_constraintVertical_bias="0.3"
         />
 
+        <com.jimmy.ml_firebase.ui.customeviews.MLRoundedImagView
+                android:id="@+id/qrCodeReader"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="@string/qr_reader"
+                android:src="@drawable/qrimg"
+                app:layout_constraintEnd_toEndOf="@id/g2"
+                app:layout_constraintTop_toTopOf="@id/googleLensClone"
+                app:layout_constraintStart_toStartOf="@id/g2"
+                app:circle_radius="0"
+                tools:background="@color/colorPrimary"
+                />
+
         <android.support.constraint.Group
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imgGroup"
-                app:constraint_referenced_ids="twitterSnap,deliciousFood,googleLensClone"
+                app:constraint_referenced_ids="twitterSnap,deliciousFood,googleLensClone,qrCodeReader"
         />
 
 
@@ -138,6 +151,18 @@
                 android:textColor="@android:color/white"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         />
+
+        <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qr_reader"
+                app:layout_constraintEnd_toEndOf="@id/g2"
+                app:layout_constraintStart_toEndOf="@id/g2"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView3"
+                android:textColor="@android:color/white"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                />
 
 
     </android.support.constraint.ConstraintLayout>

@@ -40,7 +40,7 @@ fun View.startCircularReveal(fromLeft: Boolean) {
  * @param block: Block of code to be executed on animation completion.
  */
 fun View.exitCircularReveal(exitX: Int, exitY: Int, block: () -> Unit) {
-    val startRadius = Math.hypot(this.width.toDouble(), this.height.toDouble())
+    val startRadius = hypot(this.width.toDouble(), this.height.toDouble())
     ViewAnimationUtils.createCircularReveal(this, exitX, exitY, startRadius.toFloat(), 0f).apply {
         duration = 350
         interpolator = DecelerateInterpolator(1f)
