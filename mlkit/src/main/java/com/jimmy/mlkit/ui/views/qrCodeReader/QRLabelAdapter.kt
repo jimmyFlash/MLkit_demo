@@ -69,15 +69,27 @@ class QRLabelAdapter :
                 }
                 FirebaseVisionBarcode.TYPE_GEO -> {
                     title = "Location"
-                    data = "lat: ${currentItem.geoPoint?.lat} long: ${currentItem.geoPoint?.lng}"
+                    data = "Lat: ${currentItem.geoPoint?.lat} Lng: ${currentItem.geoPoint?.lng}"
                 }
                 FirebaseVisionBarcode.TYPE_ISBN -> {
                     title = "ISBN"
-                    data = "lat: ${currentItem.displayValue}"
+                    data = "${currentItem.displayValue}"
                 }
                 FirebaseVisionBarcode.TYPE_TEXT -> {
                     title = "Text"
-                    data = "lat: ${currentItem.displayValue}"
+                    data = "${currentItem.displayValue}"
+                }
+                FirebaseVisionBarcode.TYPE_EMAIL -> {
+                    title = "Email"
+                    data = "Address: ${currentItem.email?.address} \n Subject: ${currentItem.email?.subject} \n Body: ${currentItem.email?.body}"
+                }
+                FirebaseVisionBarcode.TYPE_PHONE -> {
+                    title = "Phone#"
+                    data = "no#: ${currentItem.phone?.number} type: ${currentItem.phone?.type}"
+                }
+                FirebaseVisionBarcode.TYPE_SMS -> {
+                    title = "Sms#"
+                    data = "msg: ${currentItem.sms?.message} \n from: ${currentItem.sms?.phoneNumber}"
                 }
                 //Handle more type of Barcodes
             }
