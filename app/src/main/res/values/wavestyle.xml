@@ -13,7 +13,7 @@
     <style name="Widget.WaveView" parent="@android:style/Widget">
         <item name="waveStrokeWidth">2dp</item>
         <item name="waveColor">@color/colorPrimaryDark</item>
-        <item name="waveGap">30dp</item>
+        <item name="waveGap">80dp</item>
     </style>
 
 </resources>

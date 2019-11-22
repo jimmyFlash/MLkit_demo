@@ -114,7 +114,7 @@ class WavesView @JvmOverloads constructor(context: Context,
             addUpdateListener {
                 waveRadiusOffset = it.animatedValue as Float
             }
-            duration = 4000L
+            duration = 2000L
             repeatMode = ValueAnimator.RESTART
             repeatCount = ValueAnimator.INFINITE
             interpolator = LinearInterpolator()
@@ -149,17 +149,16 @@ class WavesView @JvmOverloads constructor(context: Context,
         super.onDraw(canvas)
 
         //draw circles separated by a space the size of waveGap (not animated)
-       /*
-        var currentRadius = initialRadius
+        var currentRadius = initialRadius + waveRadiusOffset
         while (currentRadius < maxRadius) {
             canvas.drawCircle(center.x, center.y, currentRadius, wavePaint)
+            canvas.drawPaint(gradientPaint)
             currentRadius += waveGap
         }
-        */
 
         //draw circles separated by a space the size of waveGap
 //        onDraw runs using the new offset in order to simulate the animation.
-        var currentRadius = initialRadius + waveRadiusOffset
+    /*    var currentRadius = initialRadius + waveRadiusOffset
         while (currentRadius < maxRadius) {
             // draw circles
 //            canvas.drawCircle(center.x, center.y, currentRadius, wavePaint)
@@ -171,7 +170,7 @@ class WavesView @JvmOverloads constructor(context: Context,
 
             // update radius
             currentRadius += waveGap
-        }
+        }*/
 
     }
 
