@@ -1,16 +1,25 @@
-package com.jimmy.actions.featureflags
+package com.jimmy.mlkit.ui.views
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jimmy.actions.featureflags.Feature
+import com.jimmy.actions.featureflags.FeatureFlagProvider
 import com.jimmy.mlkit.R
+import kotlinx.android.synthetic.main.item_featureflag.view.*
 
-
-private class FeatureFlagAdapter<T : Feature>(
+/**
+ * show all of the Features
+ *
+ * FeatureFlags and TestSettings had to be enums, because this allows to pass the FeatureFlagAdapter
+ * either FeatureFlag.values() or TestSetting.values() and automatically generate the UI for all
+ * defined FeatureFlags or TestSettings
+ */
+class FeatureFlagAdapter<T : Feature>(
     val items: Array<T>,
     val provider: FeatureFlagProvider,
-    val checkedListener: Function2<Feature, Boolean, Unit>
+    val checkedListener: (Feature, Boolean, Unit) -> Unit
 ) : RecyclerView.Adapter<FeatureFlagAdapter.FeatureFlagViewHolder<T>>() {
 
 
@@ -21,23 +30,19 @@ private class FeatureFlagAdapter<T : Feature>(
         holder.bind(items[position])
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeatureFlagViewHolder<T> {
-        //val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_featureflag, parent, false)
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.activity_google_lens, parent, false)
-        return FeatureFlagViewHolder(itemView, provider, checkedListener)
+        val itemView_ = LayoutInflater.from(parent.context).inflate(R.layout.item_featureflag, parent, false)
+        return FeatureFlagViewHolder(itemView_, provider, checkedListener)
     }
 
-    private class FeatureFlagViewHolder<T : Feature>(
-        view: View,
-        val provider: FeatureFlagProvider,
-        val checkedListener: Function2<Feature, Boolean, Unit>
-    ) : RecyclerView.ViewHolder(view) {
+    class FeatureFlagViewHolder<T : Feature>(view: View, val provider: FeatureFlagProvider,
+        val checkedListener: (Feature, Boolean, Unit)-> Unit) : RecyclerView.ViewHolder(view) {
 
         fun bind(feature: T) {
-        /*    title.text = feature.title
-            description.text = feature.explanation
-            switch.isChecked = provider.isFeatureEnabled(feature)
-            switch.setOnCheckedChangeListener { switch, isChecked ->
-                if (switch.isPressed) checkedListener.invoke(feature, isChecked) }*/
+            itemView.title.text = feature.title
+            itemView.description.text = feature.explanation
+            itemView.switch_.isChecked = provider.isFeatureEnabled(feature)
+            itemView.switch_.setOnCheckedChangeListener { switch, _ ->
+                if (switch.isPressed) checkedListener }
         }
     }
 }

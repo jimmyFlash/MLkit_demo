@@ -25,10 +25,6 @@ abstract class BaseCameraActivity : AppCompatActivity(){
        const val MULTI_REQUEST_CODE: Int= 2000
     }
 
-    val checkedListener = { feature: Feature, enabled: Boolean ->
-//        runtimeFeatureFlagProvider.setFeatureEnabled(feature, enabled)
-//        requestRestart()
-    }
 
      fun isCameraPermissionGranted(): Boolean {
         val permission = ContextCompat.checkSelfPermission(this@BaseCameraActivity, Manifest.permission.CAMERA)
@@ -54,6 +50,14 @@ abstract class BaseCameraActivity : AppCompatActivity(){
             .show()
     }
 
+   /*
+//    move this lambda to any activity / fragment where RuntimeFeatureFlagProvider is
+//    instantiated and layout has coordinator view for snackbar
+   val checkedListener = { feature: Feature, enabled: Boolean ->
+        runtimeFeatureFlagProvider.setFeatureEnabled(feature, enabled)
+        requestRestart()
+    }
+    */
 
 
 }

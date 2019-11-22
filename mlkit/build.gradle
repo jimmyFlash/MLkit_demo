@@ -51,6 +51,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:" + rootProject.firebaseCore
     implementation "com.google.firebase:firebase-ml-vision:" + rootProject.firebaseMlVision
     implementation "com.google.firebase:firebase-ml-vision-image-label-model:" + rootProject.firebaseMlImageLabeling
+//    implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.1'
 
     implementation "com.android.support:exifinterface:$supportAppCompat"
     implementation "com.android.support:support-v4:$supportAppCompat"
