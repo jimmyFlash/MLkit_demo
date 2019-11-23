@@ -10,6 +10,8 @@ import android.view.animation.LinearInterpolator
 import com.jimmy.ml_firebase.R
 import com.jimmy.ml_firebase.helpers.TiltListener
 import com.jimmy.ml_firebase.helpers.TiltRollSensor
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 /**
@@ -114,7 +116,7 @@ class WavesView @JvmOverloads constructor(context: Context,
             addUpdateListener {
                 waveRadiusOffset = it.animatedValue as Float
             }
-            duration = 2000L
+            duration = 4000L
             repeatMode = ValueAnimator.RESTART
             repeatCount = ValueAnimator.INFINITE
             interpolator = LinearInterpolator()
@@ -150,15 +152,14 @@ class WavesView @JvmOverloads constructor(context: Context,
 
         //draw circles separated by a space the size of waveGap (not animated)
         var currentRadius = initialRadius + waveRadiusOffset
-        while (currentRadius < maxRadius) {
+       /* while (currentRadius < maxRadius) {
             canvas.drawCircle(center.x, center.y, currentRadius, wavePaint)
             canvas.drawPaint(gradientPaint)
             currentRadius += waveGap
-        }
+        }*/
 
         //draw circles separated by a space the size of waveGap
 //        onDraw runs using the new offset in order to simulate the animation.
-    /*    var currentRadius = initialRadius + waveRadiusOffset
         while (currentRadius < maxRadius) {
             // draw circles
 //            canvas.drawCircle(center.x, center.y, currentRadius, wavePaint)
@@ -170,14 +171,14 @@ class WavesView @JvmOverloads constructor(context: Context,
 
             // update radius
             currentRadius += waveGap
-        }*/
+        }
 
     }
 
     /**
      * draws a star shape
      */
-    private fun createStarPath( radius: Float, path: Path = Path(), points: Int = 20 ): Path {
+    private fun createStarPath( radius: Float, path: Path = Path(), points: Int = 40 ): Path {
         path.reset()
         val pointDelta = 0.7f // difference between the "far" and "close" points from the center
         val angleInRadians = 2.0 * Math.PI / points // essentially 360/20 or 18 degrees, angle each line should be drawn
@@ -185,8 +186,8 @@ class WavesView @JvmOverloads constructor(context: Context,
 
         //move pointer to 0 degrees relative to the center of the screen
         path.moveTo(
-            center.x + (radius * pointDelta * Math.cos(startAngleInRadians)).toFloat(),
-            center.y + (radius * pointDelta * Math.sin(startAngleInRadians)).toFloat()
+            center.x + (radius * pointDelta * cos(startAngleInRadians)).toFloat(),
+            center.y + (radius * pointDelta * sin(startAngleInRadians)).toFloat()
         )
 
         //create a line between all the points in the star

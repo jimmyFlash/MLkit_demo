@@ -91,6 +91,10 @@ class QRLabelAdapter :
                     title = "Sms#"
                     data = "msg: ${currentItem.sms?.message} \n from: ${currentItem.sms?.phoneNumber}"
                 }
+                FirebaseVisionBarcode.FORMAT_UNKNOWN -> {
+                    title = "Unknown QR Type"
+                    data = "QR: ${currentItem.displayValue}"
+                }
                 //Handle more type of Barcodes
             }
             itemView.itemName.text = title ?: ""
