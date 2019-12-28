@@ -48,10 +48,10 @@ dependencies {
     // constraint layout with motionlayout support
     implementation "com.android.support.constraint:constraint-layout:$constraintLayout"
 
-    implementation "com.google.firebase:firebase-core:" + rootProject.firebaseCore
-    implementation "com.google.firebase:firebase-ml-vision:" + rootProject.firebaseMlVision
-    implementation "com.google.firebase:firebase-ml-vision-image-label-model:" + rootProject.firebaseMlImageLabeling
-//    implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.1'
+    implementation "com.google.firebase:firebase-core:$firebaseCore"
+    implementation "com.google.firebase:firebase-ml-vision:$firebaseMlVision"
+    implementation "com.google.firebase:firebase-ml-vision-image-label-model:$firebaseMlImageLabeling"
+    implementation "com.google.firebase:firebase-ml-model-interpreter:$firebaseMlModelInterpreter"
 
     implementation "com.android.support:exifinterface:$supportAppCompat"
     implementation "com.android.support:support-v4:$supportAppCompat"
@@ -63,6 +63,10 @@ dependencies {
     // life cycle aware components lib
     implementation 'android.arch.lifecycle:extensions:' + rootProject.archLifecycleVersion
     kapt "android.arch.lifecycle:common-java8:1.1.1"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     // add the actions module library to the project
     implementation project(":actions")

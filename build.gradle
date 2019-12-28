@@ -32,8 +32,10 @@ ext {
     firebaseCore = "16.0.4"
     firebaseMlVision = "18.0.1"
     firebaseMlImageLabeling = "17.0.2"
+    firebaseMlModelInterpreter= "16.2.3"
     constraintLayout = "2.0.0-beta2"
     supportAppCompat = "28.0.0"
+    coroutines_version = '1.3.0'
 
 
 }
