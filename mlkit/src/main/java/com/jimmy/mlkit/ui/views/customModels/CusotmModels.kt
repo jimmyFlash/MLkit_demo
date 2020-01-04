@@ -17,10 +17,7 @@ import com.google.firebase.ml.custom.FirebaseModelInterpreter
 
 import com.jimmy.mlkit.R
 import kotlinx.android.synthetic.main.cusotm_models_fragment.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.ByteBuffer
@@ -62,6 +59,7 @@ class CusotmModels : Fragment(), AdapterView.OnItemSelectedListener {
     /** Data structure holding pairs of <label, confidence> for each inference result */
     data class LabelConfidence(val label: String, val confidence: Float)
 
+    private var job: Job? = null
     /** Current image being displayed in our app's screen */
     private var selectedImage: Bitmap? = null
 
@@ -142,7 +140,7 @@ class CusotmModels : Fragment(), AdapterView.OnItemSelectedListener {
 
         val uiScope = CoroutineScope(Dispatchers.Main)
 
-        uiScope.launch {
+       job =  uiScope.launch {
             // ui thread
             val result = withContext(Dispatchers.IO) {// background thread
                 // blocking call
@@ -197,6 +195,11 @@ class CusotmModels : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
         return imgData
+    }
+
+    override fun onDestroy() {
+        job?.cancel()
+        super.onDestroy()
     }
 
     companion object {
