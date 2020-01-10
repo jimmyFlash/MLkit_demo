@@ -16,6 +16,9 @@ import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions
 import com.google.firebase.ml.custom.FirebaseModelInterpreter
 
 import com.jimmy.mlkit.R
+import com.jimmy.mlkit.ui.utils.ExitWithAnimation
+import com.jimmy.mlkit.ui.utils.startCircularReveal
+import com.jimmy.mlkit.ui.views.BaseFragment
 import kotlinx.android.synthetic.main.cusotm_models_fragment.*
 import kotlinx.coroutines.*
 import java.io.BufferedReader
@@ -26,7 +29,11 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.experimental.and
 
-class CusotmModels : Fragment(), AdapterView.OnItemSelectedListener {
+class CusotmModels : BaseFragment(), AdapterView.OnItemSelectedListener, ExitWithAnimation {
+
+    override var posX: Int? = null
+    override var posY: Int? = null
+    override fun isToBeExitedWithAnimation(): Boolean = false
 
     override fun onNothingSelected(parent: AdapterView<*>?) = Unit
 
@@ -114,6 +121,12 @@ class CusotmModels : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var viewModel: CusotmModelsViewModel
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // apply circular reveal animation mask from the bottom left on 1st instantiation
+        if(savedInstanceState == null)view.startCircularReveal(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -141,14 +154,20 @@ class CusotmModels : Fragment(), AdapterView.OnItemSelectedListener {
         val uiScope = CoroutineScope(Dispatchers.Main)
 
        job =  uiScope.launch {
-            // ui thread
-            val result = withContext(Dispatchers.IO) {// background thread
-                // blocking call
-                //modelInterpreter = createLocalModelInterpreter()
-                //modelInterpreter = createRemoteModelInterpreter()
+
+           // ui thread
+            try {// to log and handle coroutine exceptions
+                val result = withContext(Dispatchers.IO) {// background thread
+                    // blocking call
+                    //modelInterpreter = createLocalModelInterpreter()
+                    //modelInterpreter = createRemoteModelInterpreter()
+                }
+                // ui thread
+                button_run.isEnabled = true
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            // ui thread
-            button_run.isEnabled = true
+
         }
     }
 
@@ -203,7 +222,13 @@ class CusotmModels : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     companion object {
-        fun newInstance() = CusotmModels()
+        fun newInstance(exit: IntArray? = null) = CusotmModels().apply {
+            // exit animation coordinates if given
+            if (exit != null && exit.size == 2) {
+                posX = exit[0]
+                posY = exit[1]
+            }
+        }
 
         /** Name of the label file stored in Assets. */
         private const val LABEL_PATH = "labels.txt"

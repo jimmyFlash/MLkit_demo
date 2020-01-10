@@ -11,6 +11,7 @@ import com.jimmy.mlkit.ui.utils.exitCircularReveal
 import com.jimmy.mlkit.ui.utils.findLocationOfCenterOnTheScreen
 import com.jimmy.mlkit.ui.utils.open
 import com.jimmy.mlkit.ui.views.BaseCameraActivity
+import com.jimmy.mlkit.ui.views.customModels.CusotmModels
 import com.jimmy.mlkit.ui.views.qrCodeReader.QrReaderFrag
 import kotlinx.android.synthetic.main.activity_google_lens.*
 
@@ -38,6 +39,12 @@ class GoogleLens : BaseCameraActivity() {
 
                         2 -> supportFragmentManager.open {
                             replace(R.id.container, QrReaderFrag.newInstance(positions))
+
+                         }
+
+
+                        3 -> supportFragmentManager.open {
+                            replace(R.id.container, CusotmModels.newInstance(positions))
 
                          }
                     }

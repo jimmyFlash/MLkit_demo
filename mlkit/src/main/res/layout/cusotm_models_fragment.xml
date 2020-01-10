@@ -5,7 +5,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".ui.views.customModels.CusotmModels">
+        tools:context=".ui.views.customModels.CusotmModels"
+        android:background="@color/orange">
 
     <ImageView
             android:id="@+id/image_view"

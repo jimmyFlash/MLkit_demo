@@ -104,7 +104,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:contentDescription="@string/custom_model"
-                android:src="@drawable/dims"
+                android:src="@drawable/detect_obj"
                 app:layout_constraintEnd_toEndOf="@id/g1"
                 app:layout_constraintStart_toStartOf="@id/g1"
                 app:layout_constraintTop_toBottomOf="@id/googleLensClone"
