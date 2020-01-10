@@ -89,8 +89,8 @@ open class GraphicOverlayKt(context: Context, attrs: AttributeSet) : View(contex
 
         synchronized(lock) {
             if (previewWidth != 0 && previewHeight != 0) {
-                widthScaleFactor = canvas.width.toFloat() / previewWidth.toFloat()
-                heightScaleFactor = canvas.height.toFloat() / previewHeight.toFloat()
+                widthScaleFactor = width.toFloat() / previewWidth.toFloat()
+                heightScaleFactor = height.toFloat() / previewHeight.toFloat()
             }
 
             for (graphic in graphics) {
@@ -114,7 +114,7 @@ open class GraphicOverlayKt(context: Context, attrs: AttributeSet) : View(contex
          *
          *  1. [GraphicKt.scaleX] and [GraphicKt.scaleY] adjust the size of the
          * supplied value from the preview scale to the view scale.
-         *  1. [GraphicKt.translateX] and [GraphicKt.translateY] adjust the
+         *  2. [GraphicKt.translateX] and [GraphicKt.translateY] adjust the
          * coordinate from the preview's coordinate system to the view coordinate system.
          *
          *
@@ -143,11 +143,8 @@ open class GraphicOverlayKt(context: Context, attrs: AttributeSet) : View(contex
             return overlay.context.applicationContext
         }
 
-        /*
-         internal var the: Adjusts? = null internal
-                 var coordinate: x? = null internal
-                         var the: from? =
-                             null preview 's coordinate system to the view coordinate system.
+        /**
+         * Adjusts the x coordinate from the preview's coordinate system to the view coordinate system.
          */
         fun translateX(x: Float): Float {
             return if (overlay.facing == CameraCharacteristics.LENS_FACING_FRONT) {

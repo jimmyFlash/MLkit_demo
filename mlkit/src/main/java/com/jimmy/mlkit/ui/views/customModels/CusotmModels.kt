@@ -136,6 +136,7 @@ class CusotmModels : BaseFragment(), AdapterView.OnItemSelectedListener, ExitWit
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(CusotmModelsViewModel::class.java)
+        /*create the basic adapter for the spinner of images*/
         val adapter = ArrayAdapter(
             activity,
             android.R.layout.simple_spinner_dropdown_item,
@@ -151,8 +152,10 @@ class CusotmModels : BaseFragment(), AdapterView.OnItemSelectedListener, ExitWit
         // Disable the inference button until model is loaded
         button_run.isEnabled = false
 
+        // initialize your coroutine scope to main dispatcher (old implementation before androidx)
         val uiScope = CoroutineScope(Dispatchers.Main)
 
+        // launch coroutine
        job =  uiScope.launch {
 
            // ui thread
