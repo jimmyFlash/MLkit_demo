@@ -6,19 +6,24 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import com.google.firebase.ml.common.FirebaseMLException
 import com.google.firebase.ml.custom.FirebaseModelDataType
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions
+import com.google.firebase.ml.custom.FirebaseModelInputs
 import com.google.firebase.ml.custom.FirebaseModelInterpreter
 
 import com.jimmy.mlkit.R
 import com.jimmy.mlkit.ui.utils.ExitWithAnimation
 import com.jimmy.mlkit.ui.utils.startCircularReveal
 import com.jimmy.mlkit.ui.views.BaseFragment
+import com.jimmy.mlkit.ui.views.customModels.customViews.LabelGraphicKt
 import kotlinx.android.synthetic.main.cusotm_models_fragment.*
 import kotlinx.coroutines.*
 import java.io.BufferedReader
@@ -30,6 +35,8 @@ import kotlin.math.min
 import kotlin.experimental.and
 
 class CusotmModels : BaseFragment(), AdapterView.OnItemSelectedListener, ExitWithAnimation {
+
+    val TAG = CusotmModels::class.java.canonicalName
 
     override var posX: Int? = null
     override var posY: Int? = null
@@ -176,7 +183,29 @@ class CusotmModels : BaseFragment(), AdapterView.OnItemSelectedListener, ExitWit
 
     /** Uses model to make predictions and interpret output into likely labels. */
     private fun runModelInference() = selectedImage?.let { image ->
-        throw NotImplementedError("TODO: complete this section")
+        // Create input data.
+        val imgData = convertBitmapToByteBuffer(image)
+
+        try {
+            // Create model inputs from our image data.
+            val modelInputs = FirebaseModelInputs.Builder().add(imgData).build()
+
+            // Perform inference using our model interpreter.
+            modelInterpreter.run(modelInputs, modelInputOutputOptions).continueWith {
+                val inferenceOutput = it.result?.getOutput<Array<ByteArray>>(0)!!
+
+                // Display labels on the screen using an overlay
+                val topLabels = getTopLabels(inferenceOutput)
+                graphic_overlay.clear()
+                graphic_overlay.add(LabelGraphicKt(graphic_overlay, topLabels as ArrayList<String>))
+                topLabels
+            }
+
+        } catch (exc: FirebaseMLException) {
+            val msg = "Error running model inference"
+            Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
+            Log.e(TAG, msg, exc)
+        }
     }
 
     /** Gets the top labels in the results. */
@@ -204,6 +233,7 @@ class CusotmModels : BaseFragment(), AdapterView.OnItemSelectedListener, ExitWit
         }
         val scaledBitmap =  Bitmap.createScaledBitmap(bitmap, DIM_IMG_SIZE_X, DIM_IMG_SIZE_Y,
             true)
+        // Returns in pixels[] a copy of the data in the bitmap
         scaledBitmap.getPixels(imageBuffer, 0, scaledBitmap.width, 0, 0,
             scaledBitmap.width, scaledBitmap.height)
         // Convert the image to int points.
