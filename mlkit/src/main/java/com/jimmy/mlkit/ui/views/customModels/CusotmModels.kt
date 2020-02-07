@@ -1,11 +1,11 @@
 package com.jimmy.mlkit.ui.views.customModels
 
+
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +18,6 @@ import com.google.firebase.ml.custom.FirebaseModelDataType
 import com.google.firebase.ml.custom.FirebaseModelInputOutputOptions
 import com.google.firebase.ml.custom.FirebaseModelInputs
 import com.google.firebase.ml.custom.FirebaseModelInterpreter
-
 import com.jimmy.mlkit.R
 import com.jimmy.mlkit.ui.utils.ExitWithAnimation
 import com.jimmy.mlkit.ui.utils.startCircularReveal
@@ -30,9 +29,9 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import kotlin.experimental.and
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.experimental.and
 
 class CusotmModels : BaseFragment(), AdapterView.OnItemSelectedListener, ExitWithAnimation {
 
@@ -116,10 +115,22 @@ class CusotmModels : BaseFragment(), AdapterView.OnItemSelectedListener, ExitWit
     private lateinit var modelInterpreter: FirebaseModelInterpreter
 
     /** Initialize a local model interpreter from assets file */
-    private fun createLocalModelInterpreter(): FirebaseModelInterpreter {
-        throw NotImplementedError("TODO: complete this section")
-    }
+  /*  private fun createLocalModelInterpreter(): FirebaseModelInterpreter {
+        // Select the first available .tflite file as our local model
+        val localModelName = resources.assets.list("")?.firstOrNull { it.endsWith(".tflite") }
+            ?: throw(RuntimeException("Don't forget to add the tflite file to your assets folder"))
+        Log.d(TAG, "Local model found: $localModelName")
 
+        // Create an interpreter with the local model asset
+        val localModel =
+            FirebaseCustomLocalModel.Builder().setAssetFilePath(localModelName).build()
+        val localInterpreter = FirebaseModelInterpreter.getInstance(
+            FirebaseModelInterpreterOptions.Builder(localModel).build())!!
+        Log.d(TAG, "Local model interpreter initialized")
+
+        // Return the interpreter
+        return localInterpreter
+    }*/
     /** Initialize a remote model interpreter from Firebase server */
     private suspend fun createRemoteModelInterpreter(): FirebaseModelInterpreter {
         throw NotImplementedError("TODO: complete this section")
