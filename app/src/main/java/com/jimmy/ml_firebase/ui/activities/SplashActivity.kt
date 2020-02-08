@@ -45,10 +45,10 @@ class SplashActivity : AppCompatActivity() {
                 mapOf<String, Any>(Constants.FRGAMENT_TYPE to 2))))
         }
 
-        customModelRecognition.setOnClickListener {
+     /*   customModelRecognition.setOnClickListener {
             startActivity(Intent(Actions.openGoogleLens(this@SplashActivity,
                 mapOf<String, Any>(Constants.FRGAMENT_TYPE to 3))))
-        }
+        }*/
 
     }
 }

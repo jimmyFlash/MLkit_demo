@@ -25,7 +25,6 @@
                 android:layerType="hardware"
                 />
 
-
         <android.support.constraint.Guideline
                 android:id="@+id/g1"
                 android:layout_width="wrap_content"
@@ -53,7 +52,7 @@
                 app:layout_constraintEnd_toEndOf="@id/g1"
                 app:circle_radius="0"
                 tools:background="@color/colorPrimary"
-                app:layout_constraintVertical_bias="0.1"
+                app:layout_constraintVertical_bias="0.3"
         />
 
 
@@ -99,7 +98,7 @@
                 tools:background="@color/colorPrimary"
                 />
 
-        <com.jimmy.ml_firebase.ui.customeviews.MLRoundedImagView
+     <!--   <com.jimmy.ml_firebase.ui.customeviews.MLRoundedImagView
                 android:id="@+id/customModelRecognition"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -113,13 +112,13 @@
                 app:circle_radius="0"
                 tools:background="@color/colorPrimary"
                 app:layout_constraintVertical_bias="0.3"
-                />
+                />-->
 
         <android.support.constraint.Group
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imgGroup"
-                app:constraint_referenced_ids="twitterSnap,deliciousFood,googleLensClone,qrCodeReader,customModelRecognition"
+                app:constraint_referenced_ids="twitterSnap,deliciousFood,googleLensClone,qrCodeReader"
         />
 
 
@@ -179,6 +178,7 @@
                 android:textColor="@android:color/white"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 />
+<!--
 
         <TextView
                 android:id="@+id/textView5"
@@ -192,6 +192,7 @@
                 android:layout_marginTop="10dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 />
+-->
 
 
 
