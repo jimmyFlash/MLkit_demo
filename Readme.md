@@ -1,9 +1,9 @@
-Firebase ML-kit application 
+Firebase ML-kit demo
 - built with kotlin
 - MVVM pattern
 - LiveData arch components
 - Workmanager
-- MotionLayout implementation
+- MotionLayout simple implementation
 
 
 ** demo highlighting text blocks matching twitter handels in and image, enables visiting twitter profile in browser
